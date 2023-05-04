@@ -3,7 +3,14 @@ guid: ba4d11db76b3ac3468b3e87357b90292
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - cameraTransform: {instanceID: 0}
+  - attackSound: {fileID: 8300000, guid: 4bbb45855f174804793cc78c4857871a, type: 3}
+  - deathSound: {fileID: 8300000, guid: 8fe9bec485997cc43946a7539bee3c7d, type: 3}
+  - jumpSound: {fileID: 8300000, guid: 87371610f3f67e34aac4dcb4b6f30d72, type: 3}
+  - victorySound: {fileID: 8300000, guid: 781b71b15ba550d4098c89a4bb5ffae0, type: 3}
+  - runningSound: {fileID: 8300000, guid: 50f66a9108be31f41955c1c45faa3165, type: 3}
+  - dizzySound: {fileID: 8300000, guid: 624645c101b0b384990c6d99ce3afae2, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
