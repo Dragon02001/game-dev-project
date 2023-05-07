@@ -24,7 +24,10 @@ public class Sword : MonoBehaviour
         if (other.tag == "Enemy" && cm.isAttacking)
         {
             Debug.Log(other.name);
+            other.GetComponent<Animator>().SetBool("isAttacking", false);
             other.GetComponent<Animator>().SetTrigger("Hit");
+            
+            other.GetComponent<Animator>().ResetTrigger("Hit");
 
             // Instantiate(HitParticle, new Vector3(other.transform.position.x, transform.poistion.y, other.transform.position.z), other.transform.rotation);
         }

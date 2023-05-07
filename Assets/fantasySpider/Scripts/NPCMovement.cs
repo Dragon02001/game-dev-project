@@ -5,20 +5,55 @@ using UnityEngine;
 public class NPCMovement : MonoBehaviour
 {
     public float speed = 5f;
+    public float runspeed = 10f;
     public float changeDirectionDelay = 2f;
     public float pauseDuration = 1f;
     public Animator anim;
+    public float health = 100f;
+
     private float timeSinceLastDirectionChange = 0f;
     private float timeSinceLastPause = 0f;
     private bool isPaused = false;
     private Vector3 nextDirection;
-    public float health = 100f;
     private bool isMoving = false;
+    private GameObject player;
+    private float followDistance = 15f; // the distance at which the NPC starts following the player
+    private float attackDistance = 5f;// the distance at which the NPC starts attacking the player
+    public float attackInterval = 1f; // Minimum time between attacks
+    private void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player");
+    }
+
     void Update()
     {
-        if (!isPaused)
+        // Check if the player is within the follow distance
+        if (Vector3.Distance(transform.position, player.transform.position) < followDistance)
         {
+            if (Vector3.Distance(transform.position, player.transform.position) < attackDistance)
+            {
+                attack();
+            }
+            else
+            {
+                anim.SetBool("agro", true);
+                // Set the next direction towards the player
+                nextDirection = (player.transform.position - transform.position).normalized;
 
+                // Move the NPC towards the player
+                transform.Translate(nextDirection * runspeed * Time.deltaTime, Space.World);
+
+                // Smoothly rotate the NPC towards the player
+                if (nextDirection != Vector3.zero) // check if nextDirection is not zero
+                {
+                    Quaternion targetRotation = Quaternion.LookRotation(nextDirection, Vector3.up);
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 360f * Time.deltaTime);
+                }
+            }
+        }
+        else if (!isPaused && !anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        {
+            anim.SetBool("agro", false);
             timeSinceLastDirectionChange += Time.deltaTime;
 
             if (timeSinceLastDirectionChange >= changeDirectionDelay)
@@ -29,13 +64,11 @@ public class NPCMovement : MonoBehaviour
                 timeSinceLastDirectionChange = 0f;
                 isMoving = false;
                 anim.SetBool("isMoving", isMoving);
-                //Debug.Log("not moving");
             }
             else
             {
                 isMoving = true;
                 anim.SetBool("isMoving", isMoving);
-               // Debug.Log("Moving");
             }
 
             // Move the NPC
@@ -50,6 +83,7 @@ public class NPCMovement : MonoBehaviour
         }
         else
         {
+            anim.SetBool("agro", false);
             // Pause before changing direction
             timeSinceLastPause += Time.deltaTime;
 
@@ -64,12 +98,33 @@ public class NPCMovement : MonoBehaviour
                 nextDirection = Quaternion.AngleAxis(angle, Vector3.up) * Vector3.forward;
                 isMoving = true;
                 anim.SetBool("isMoving", isMoving);
-               // Debug.Log("Moving");
             }
         }
     }
 
 
+    void attack()
+    {
+        // Stop moving
+        isMoving = false;
+        anim.SetBool("isMoving", isMoving);
+
+        // Trigger attack animation
+        anim.SetTrigger("isAttacking");
+
+        // Wait for attack animation to finish
+        float attackAnimationDuration = anim.GetCurrentAnimatorStateInfo(0).length;
+        StartCoroutine(WaitForAttackAnimation(attackAnimationDuration));
+    }
+
+    IEnumerator WaitForAttackAnimation(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        
+        // Resume moving
+        isMoving = true;
+        anim.SetBool("isMoving", isMoving);
+    }
     //void OnTriggerEnter(Collider other)
     //{
     //    if (other.CompareTag("Weapon"))
