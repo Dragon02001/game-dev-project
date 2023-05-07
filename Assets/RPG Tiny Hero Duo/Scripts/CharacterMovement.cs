@@ -20,7 +20,7 @@ public class CharacterMovement : MonoBehaviour
 
     private Animator animator;
     private bool isWalking = false;
-    private bool isAttacking = false;
+    public bool isAttacking = false;
     private bool isDefending = false;
     private bool isJumping = false;
     private bool isRunning = false;
@@ -214,7 +214,7 @@ public class CharacterMovement : MonoBehaviour
 
             void UpdateStamina2()
             {
-                if(playerStamina <= 0.0f)
+                if (playerStamina <= 0.0f)
                 {
                     // Play the animation
                     animator.SetBool("isDizzy", true);
@@ -241,6 +241,7 @@ public class CharacterMovement : MonoBehaviour
                 playerStamina = maxStamina;
                 speed = isRunning ? 8.0f : 5.0f;
             }
+
         }
     }
 }
