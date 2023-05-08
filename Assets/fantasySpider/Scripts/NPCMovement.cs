@@ -20,9 +20,17 @@ public class NPCMovement : MonoBehaviour
     private float followDistance = 15f; // the distance at which the NPC starts following the player
     private float attackDistance = 5f;// the distance at which the NPC starts attacking the player
     public float attackInterval = 1f; // Minimum time between attacks
+
+    public AudioClip runSound;
+    public AudioClip attackSound;
+    private AudioSource audioSource1;
+    private AudioSource audioSource2;
+
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        audioSource1 = GetComponent<AudioSource>();
+        audioSource2 = gameObject.AddComponent<AudioSource>();
     }
 
     void Update()
@@ -40,6 +48,12 @@ public class NPCMovement : MonoBehaviour
                 // Set the next direction towards the player
                 nextDirection = (player.transform.position - transform.position).normalized;
 
+                
+                if (!audioSource1.isPlaying)
+                {
+                    audioSource1.clip = runSound;
+                    audioSource1.Play();
+                }
                 // Move the NPC towards the player
                 transform.Translate(nextDirection * runspeed * Time.deltaTime, Space.World);
 
@@ -53,6 +67,11 @@ public class NPCMovement : MonoBehaviour
         }
         else if (!isPaused && !anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
+            // Stop playing the audio when the spider is not following the character
+            if (audioSource1.isPlaying)
+            {
+                audioSource1.Stop();
+            }
             anim.SetBool("agro", false);
             timeSinceLastDirectionChange += Time.deltaTime;
 
@@ -83,8 +102,14 @@ public class NPCMovement : MonoBehaviour
         }
         else
         {
+            // Stop playing the audio when the spider is not following the character
+            if (audioSource1.isPlaying)
+            {
+                audioSource1.Stop();
+            }
             anim.SetBool("agro", false);
             // Pause before changing direction
+            
             timeSinceLastPause += Time.deltaTime;
 
             if (timeSinceLastPause >= pauseDuration)
@@ -108,9 +133,18 @@ public class NPCMovement : MonoBehaviour
         // Stop moving
         isMoving = false;
         anim.SetBool("isMoving", isMoving);
+        if (audioSource1.isPlaying)
+        {
+            audioSource1.Stop();
+        }
 
+        // Play attack sound
+        audioSource2.clip = attackSound;
+        audioSource2.Play();
         // Trigger attack animation
         anim.SetTrigger("isAttacking");
+
+        
 
         // Wait for attack animation to finish
         float attackAnimationDuration = anim.GetCurrentAnimatorStateInfo(0).length;
