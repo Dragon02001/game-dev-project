@@ -244,4 +244,15 @@ public class CharacterMovement : MonoBehaviour
 
         }
     }
+    public void TakeDamage(float amount)
+    {
+        playerHealth -= amount;
+       // Debug.Log(playerHealth);
+
+        if (playerHealth <= 0)
+        {
+            Debug.Log("Dead");
+            // Die();
+        }
+    }
 }

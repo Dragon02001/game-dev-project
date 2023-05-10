@@ -1,40 +1,68 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class NPCMovement : MonoBehaviour
 {
+    public float followDistance = 15f; // the distance at which the NPC starts following the player
+    public float attackDistance = 5f; // the distance at which the NPC starts attacking the player
+    public float attackInterval = 1f; // minimum time between attacks
+    public float health = 1f;
     public float speed = 5f;
-    public float runspeed = 10f;
-    public float changeDirectionDelay = 2f;
-    public float pauseDuration = 1f;
+    public AudioClip runSound;
+    public AudioClip attackSound;
     public Animator anim;
-    public float health = 100f;
 
+    private NavMeshAgent agent;
+    private GameObject player;
+    private AudioSource audioSource1;
+    private AudioSource audioSource2;
     private float timeSinceLastDirectionChange = 0f;
     private float timeSinceLastPause = 0f;
     private bool isPaused = false;
     private Vector3 nextDirection;
+    public float changeDirectionDelay = 2f;
+    public float pauseDuration = 1f;
     private bool isMoving = false;
-    private GameObject player;
-    private float followDistance = 15f; // the distance at which the NPC starts following the player
-    private float attackDistance = 5f;// the distance at which the NPC starts attacking the player
-    public float attackInterval = 1f; // Minimum time between attacks
+    private bool isAttacking = false;
+    private float timeSinceLastAttack = 0f;
 
-    public AudioClip runSound;
-    public AudioClip attackSound;
-    private AudioSource audioSource1;
-    private AudioSource audioSource2;
-
-    private void Start()
+    void Start()
     {
+        agent = GetComponent<NavMeshAgent>();
+        if (agent == null)
+        {
+            Debug.LogError("NavMeshAgent component not found on game object: " + gameObject.name);
+        }
+        else if (!agent.isOnNavMesh)
+        {
+            Debug.LogError("Game object " + gameObject.name + " is not on a NavMesh.");
+        }
         player = GameObject.FindGameObjectWithTag("Player");
         audioSource1 = GetComponent<AudioSource>();
         audioSource2 = gameObject.AddComponent<AudioSource>();
     }
 
+
     void Update()
     {
+
+        //Debug.Log(isAttacking);
+       // Debug.Log("move "isMoving);
+       // Debug.Log("pause "isPaused);
+
+        if (isAttacking)
+        {
+            // Don't move or attack again until the attack animation is finished
+            if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+            {
+                isAttacking = false;
+                timeSinceLastAttack = 0f;
+            }
+            return;
+        }
+
         // Check if the player is within the follow distance
         if (Vector3.Distance(transform.position, player.transform.position) < followDistance)
         {
@@ -45,23 +73,13 @@ public class NPCMovement : MonoBehaviour
             else
             {
                 anim.SetBool("agro", true);
-                // Set the next direction towards the player
-                nextDirection = (player.transform.position - transform.position).normalized;
+                // Set the destination to the player's position
+                agent.SetDestination(player.transform.position);
 
-                
                 if (!audioSource1.isPlaying)
                 {
                     audioSource1.clip = runSound;
                     audioSource1.Play();
-                }
-                // Move the NPC towards the player
-                transform.Translate(nextDirection * runspeed * Time.deltaTime, Space.World);
-
-                // Smoothly rotate the NPC towards the player
-                if (nextDirection != Vector3.zero) // check if nextDirection is not zero
-                {
-                    Quaternion targetRotation = Quaternion.LookRotation(nextDirection, Vector3.up);
-                    transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 360f * Time.deltaTime);
                 }
             }
         }
@@ -109,7 +127,7 @@ public class NPCMovement : MonoBehaviour
             }
             anim.SetBool("agro", false);
             // Pause before changing direction
-            
+
             timeSinceLastPause += Time.deltaTime;
 
             if (timeSinceLastPause >= pauseDuration)
@@ -125,14 +143,16 @@ public class NPCMovement : MonoBehaviour
                 anim.SetBool("isMoving", isMoving);
             }
         }
+    
+
+    // Count the time since the last attack
+    timeSinceLastAttack += Time.deltaTime;
     }
 
-
-    void attack()
+    IEnumerator AttackWithDelay(float delay)
     {
-        // Stop moving
-        isMoving = false;
-        anim.SetBool("isMoving", isMoving);
+        // Stop moving and playing the run sound
+        agent.isStopped = true;
         if (audioSource1.isPlaying)
         {
             audioSource1.Stop();
@@ -141,46 +161,58 @@ public class NPCMovement : MonoBehaviour
         // Play attack sound
         audioSource2.clip = attackSound;
         audioSource2.Play();
+
         // Trigger attack animation
         anim.SetTrigger("isAttacking");
+        isAttacking = true;
 
-        
+        // Inflict damage to player
+        if (Vector3.Distance(transform.position, player.transform.position) < attackDistance)
+        {
+            GameObject character = GameObject.FindWithTag("Player"); //Jack prefab is tagged as player
+            if (character != null)
+            {
+                CharacterMovement characterMovement = character.GetComponent<CharacterMovement>();
+                characterMovement.TakeDamage(0.1f);
+            }
+        }
 
         // Wait for attack animation to finish
         float attackAnimationDuration = anim.GetCurrentAnimatorStateInfo(0).length;
+        yield return new WaitForSeconds(delay);
         StartCoroutine(WaitForAttackAnimation(attackAnimationDuration));
+    }
+
+    void attack()
+    {
+        if (timeSinceLastAttack >= attackInterval)
+        {
+            StartCoroutine(AttackWithDelay(0.5f)); // Wait for 0.5 seconds before attacking
+        }
     }
 
     IEnumerator WaitForAttackAnimation(float duration)
     {
         yield return new WaitForSeconds(duration);
-        
-        // Resume moving
-        isMoving = true;
-        anim.SetBool("isMoving", isMoving);
+        agent.isStopped = false; // Resume moving
+        isAttacking = false;
+        timeSinceLastAttack = 0f;
+        anim.SetBool("isAttacking", false); // Reset the "isAttacking" parameter in the animator
     }
-    //void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.CompareTag("Weapon"))
-    //    {
-    //        TakeDamage(10);
-    //    }
-    //}
+    public void TakeDamage(float amount)
+    {
+        health -= amount;
+        Debug.Log(health);
 
-    //void TakeDamage(float amount)
-    //{
-    //    health -= amount;
-    //    Debug.Log(health);
+        if (health <= 0)
+        {
+            Debug.Log(" I am Dead");
+            Destroy(gameObject);
+        }
+    }
 
-    //    if (health <= 0)
-    //    {
-    //        Die();
-    //    }
-    //}
 
-    //void Die()
-    //{
-    //    // Play death animation or particle effect
-    //    Destroy(gameObject);
-    //}
+
 }
+
+
