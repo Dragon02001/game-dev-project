@@ -203,6 +203,11 @@ public class NPCMovement : MonoBehaviour
     {
         health -= amount;
         Debug.Log(health);
+        GameObject character = GameObject.FindGameObjectWithTag("Enemy");
+        Vector3 offset = new Vector3(0.0f, 2.5f, 1.0f); // Vertical offset from the character
+        Vector3 position = character.transform.position + offset;
+        damagepopup.current.CreatePopUp(position, amount.ToString(), Color.yellow);
+       
 
         if (health <= 0)
         {

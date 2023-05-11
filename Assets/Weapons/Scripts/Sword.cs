@@ -27,7 +27,7 @@ public class Sword : MonoBehaviour
             NPCMovement enemy = other.GetComponent<NPCMovement>(); //Retrieve the NPCMovement component from the GameObject
             if (enemy != null)
             {
-                enemy.TakeDamage(0.4f); //Call the TakeDamage function on the NPCMovement component
+                enemy.TakeDamage(Random.Range(0f, 0.5f)); //Call the TakeDamage function on the NPCMovement component
             }
             //  other.GetComponent<Animator>().SetBool("isAttacking", false);
             // other.GetComponent<Animator>().SetTrigger("Hit");
