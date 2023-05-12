@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Sword : MonoBehaviour
 {
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,12 +29,12 @@ public class Sword : MonoBehaviour
             NPCMovement enemy = other.GetComponent<NPCMovement>(); //Retrieve the NPCMovement component from the GameObject
             if (enemy != null)
             {
-                enemy.TakeDamage(Random.Range(0f, 0.5f)); //Call the TakeDamage function on the NPCMovement component
+                float damage = Random.Range(0f, 0.5f);
+                float roundedDamage = Mathf.Round(damage * 100f) / 100f; // round to two decimal places
+                enemy.TakeDamage(roundedDamage);
             }
-            //  other.GetComponent<Animator>().SetBool("isAttacking", false);
-            // other.GetComponent<Animator>().SetTrigger("Hit");
 
-            //  other.GetComponent<Animator>().ResetTrigger("Hit");
+
 
             // Instantiate(HitParticle, new Vector3(other.transform.position.x, transform.poistion.y, other.transform.position.z), other.transform.rotation);
         }

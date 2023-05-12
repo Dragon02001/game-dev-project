@@ -43,7 +43,7 @@ public class damagepopup : MonoBehaviour
         popup.transform.Rotate(new Vector3(0, 180, 0));
 
         // Destroy the pop-up after 2 seconds
-        Destroy(popup, 2f);
+        Destroy(popup, 1f);
     }
 
 }
