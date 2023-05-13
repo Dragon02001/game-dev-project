@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33393209348629802}
   - component: {fileID: 23078901617180164}
   - component: {fileID: -2938100219174450994}
+  - component: {fileID: 5589557477772922154}
   m_Layer: 0
   m_Name: OakCut
   m_TagString: Untagged
@@ -93,7 +94,21 @@ BoxCollider:
   m_GameObject: {fileID: 1252220935515434}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 3.800773, y: 1.0367787, z: 2.2098393}
   m_Center: {x: -1.3251971, y: 0.11401737, z: -0.4045772}
+--- !u!136 &5589557477772922154
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1252220935515434}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.7
+  m_Height: 0.79
+  m_Direction: 1
+  m_Center: {x: 0.12, y: 0.11401737, z: -0.14}

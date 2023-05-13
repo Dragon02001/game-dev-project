@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33458132740821418}
   - component: {fileID: 23130922520876464}
   - component: {fileID: 6777994211216087467}
+  - component: {fileID: 3562986111570131961}
   m_Layer: 0
   m_Name: Oak
   m_TagString: Untagged
@@ -94,7 +95,21 @@ BoxCollider:
   m_GameObject: {fileID: 1209846326057578}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 34.352463, y: 38.84204, z: 50.269676}
   m_Center: {x: 2.7517471, y: 17.459553, z: 0.9438124}
+--- !u!136 &3562986111570131961
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1209846326057578}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 4
+  m_Height: 38.84204
+  m_Direction: 1
+  m_Center: {x: 0.61, y: 17.459553, z: 0.9438124}

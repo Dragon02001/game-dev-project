@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33444049280215880}
   - component: {fileID: 23543373797792450}
   - component: {fileID: 4029985400470319258}
+  - component: {fileID: 5971555992896600718}
   m_Layer: 0
   m_Name: SmalltreeDry
   m_TagString: Untagged
@@ -94,7 +95,21 @@ BoxCollider:
   m_GameObject: {fileID: 1269626473268306}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 12.048342, y: 17.104492, z: 10.019666}
   m_Center: {x: -0.61724925, y: 7.9770145, z: 0.46674728}
+--- !u!136 &5971555992896600718
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1269626473268306}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.36
+  m_Height: 17.104492
+  m_Direction: 1
+  m_Center: {x: -0.08, y: 7.9770145, z: 0.16}

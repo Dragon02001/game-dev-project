@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33492432299799758}
   - component: {fileID: 23383625345876572}
   - component: {fileID: -7002623441517620188}
+  - component: {fileID: 435697026007602714}
   m_Layer: 0
   m_Name: Rock4
   m_TagString: Untagged
@@ -93,7 +94,21 @@ BoxCollider:
   m_GameObject: {fileID: 1602763302890992}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 53.89671, y: 39.133156, z: 46.822075}
+  m_Center: {x: -1.8552742, y: 19.55796, z: -3.654292}
+--- !u!136 &435697026007602714
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1602763302890992}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 22
+  m_Height: 39.133156
+  m_Direction: 1
   m_Center: {x: -1.8552742, y: 19.55796, z: -3.654292}

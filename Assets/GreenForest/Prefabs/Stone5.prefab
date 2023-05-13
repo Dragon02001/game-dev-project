@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33265495057514378}
   - component: {fileID: 23809495085541422}
   - component: {fileID: -6646828884336357045}
+  - component: {fileID: 1054418006198257472}
   m_Layer: 0
   m_Name: Stone5
   m_TagString: Untagged
@@ -93,7 +94,21 @@ BoxCollider:
   m_GameObject: {fileID: 1174957462847092}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 0.749733, y: 0.31811967, z: 0.9853065}
   m_Center: {x: 0.00000047683716, y: 0.14263137, z: 0.00000035762787}
+--- !u!136 &1054418006198257472
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1174957462847092}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.36
+  m_Height: 0.31811967
+  m_Direction: 1
+  m_Center: {x: 0.00000047683716, y: -0.06, z: 0.00000035762787}

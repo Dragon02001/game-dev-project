@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33821058462474890}
   - component: {fileID: 23306027707534168}
   - component: {fileID: 7305808972046614986}
+  - component: {fileID: 6552144195801817418}
   m_Layer: 0
   m_Name: Pinetree2
   m_TagString: Untagged
@@ -94,7 +95,21 @@ BoxCollider:
   m_GameObject: {fileID: 1182065749094538}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 11.435465, y: 12.814166, z: 12.150168}
   m_Center: {x: 0.6904192, y: 6.1054053, z: -1.0035043}
+--- !u!136 &6552144195801817418
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182065749094538}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.43
+  m_Height: 12.814166
+  m_Direction: 1
+  m_Center: {x: -0.04, y: 6.1054053, z: 0.01}

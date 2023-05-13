@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33080570096323414}
   - component: {fileID: 23435918069475484}
   - component: {fileID: 5205409498878579623}
+  - component: {fileID: 507186256516780998}
   m_Layer: 0
   m_Name: CutedTree2
   m_TagString: Untagged
@@ -93,7 +94,21 @@ BoxCollider:
   m_GameObject: {fileID: 1459734292331438}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 5.042311, y: 2.9278014, z: 12.466193}
   m_Center: {x: 0.33043194, y: 0.6932546, z: -5.992637}
+--- !u!136 &507186256516780998
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1459734292331438}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.52
+  m_Height: 12.97
+  m_Direction: 2
+  m_Center: {x: -0.18, y: 0.23, z: -5.992637}
