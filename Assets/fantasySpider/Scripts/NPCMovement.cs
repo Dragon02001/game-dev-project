@@ -5,31 +5,35 @@ using UnityEngine.AI;
 
 public class NPCMovement : MonoBehaviour
 {
-    public float followDistance = 15f; // the distance at which the NPC starts following the player
-    public float attackDistance = 5f; // the distance at which the NPC starts attacking the player
-    public float attackInterval = 1f; // minimum time between attacks
-    public float health = 1f;
-    public float speed = 5f;
-    public AudioClip runSound;
-    public AudioClip attackSound;
-    public Animator anim;
-    private NavMeshAgent agent;
-    private GameObject player;
-    private AudioSource audioSource1;
-    private AudioSource audioSource2;
-    private float timeSinceLastDirectionChange = 0f;
-    private float timeSinceLastPause = 0f;
-    private bool isPaused = false;
-    private Vector3 nextDirection;
-    private float changeDirectionDelay = 2f;
-    private float pauseDuration = 1f;
+    [SerializeField] private float followDistance = 15f;
+    [SerializeField] private float attackDistance = 5f;
+    [SerializeField] private float attackInterval = 1f;
+    [SerializeField] private float maxHealth = 1f;
+    [SerializeField] private float speed = 5f;
+    [SerializeField] private AudioClip runSound;
+    [SerializeField] private AudioClip attackSound;
+    [SerializeField] private Animator animator;
+    [SerializeField] private NavMeshAgent agent;
+    [SerializeField] private GameObject player;
+    [SerializeField] private AudioSource audioSource1;
+    [SerializeField] private AudioSource audioSource2;
+
     private bool isMoving = false;
     private bool isAttacking = false;
-    private bool isAgro = false;
-    private bool hit = false;
-    private float timeSinceLastAttack = 0f;
+    private bool isAggressive = false;
+    private bool isHit = false;
+    private bool isPaused = false;
 
-    void Start()
+    private float timeSinceLastAttack = 0f;
+    private float timeSinceLastDirectionChange = 0f;
+    private float timeSinceLastPause = 0f;
+    private float directionChangeDelay = 2f;
+    private float pauseDuration = 1f;
+    private float currentHealth;
+
+    private Vector3 nextDirection;
+
+    private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         if (agent == null)
@@ -43,111 +47,196 @@ public class NPCMovement : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         audioSource1 = GetComponent<AudioSource>();
         audioSource2 = gameObject.AddComponent<AudioSource>();
+        currentHealth = maxHealth;
     }
 
-
-    void Update()
+    private void Update()
     {
-        //Debug.Log("isAttacking: " + isAttacking);
-        //Debug.Log("isMove: " + isMoving);
-        //Debug.Log("isPaused: " + isPaused);
-        //Debug.Log("isAgro: " + isAgro);
-
         if (isAttacking)
         {
-            // Don't move or attack again until the attack animation is finished
-            if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
             {
                 isAttacking = false;
                 timeSinceLastAttack = 0f;
+                agent.isStopped = false;
             }
             return;
         }
-
-        // Check if the player is within the follow distance
-        if (Vector3.Distance(transform.position, player.transform.position) < followDistance && health > 0)
+        else
         {
-            if (Vector3.Distance(transform.position, player.transform.position) < attackDistance)
+            ResumeMovement();
+        }
+
+        if (isAggressive)
+        {
+            // Check if the player is within attack range
+            if (Vector3.Distance(transform.position, player.transform.position) <= attackDistance)
             {
-                attack();
+                // Attack the player if enough time has passed since the last attack
+                if (timeSinceLastAttack >= attackInterval)
+                {
+                    // Start attacking with delay
+                    StartCoroutine(AttackWithDelay(0.5f));
+                }
             }
             else
             {
-                isAgro = true;
-                anim.SetBool("agro", isAgro);
                 // Set the destination to the player's position
                 agent.SetDestination(player.transform.position);
+            }
+        }
+        else
+        {
+            // Stop playing the audio when the spider is not following the character
+            if (audioSource1.isPlaying)
+            {
+                audioSource1.Stop();
+            }
 
-                if (!audioSource1.isPlaying)
+            // Roam around randomly
+            if (!isPaused && !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") && currentHealth > 0)
+            {
+                timeSinceLastDirectionChange += Time.deltaTime;
+                if (timeSinceLastDirectionChange >= directionChangeDelay)
                 {
-                    audioSource1.clip = runSound;
-                    audioSource1.Play();
+                    // Pause before changing direction
+                    isPaused = true;
+                    timeSinceLastPause = 0f;
+                    timeSinceLastDirectionChange = 0f;
+                    isMoving = false;
+                    animator.SetBool("isMoving", isMoving);
+                }
+                else
+                {
+                    isMoving = true;
+                    animator.SetBool("isMoving", isMoving);
+                }
+
+                // Move the NPC
+                transform.Translate(nextDirection * speed * Time.deltaTime, Space.World);
+
+                if (nextDirection != Vector3.zero)
+                {
+                    // Rotate the NPC towards the next direction
+                    Quaternion targetRotation = Quaternion.LookRotation(nextDirection, Vector3.up);
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 360f * Time.deltaTime);
+                }
+            }
+            else if (currentHealth > 0)
+            {
+                // Pause before changing direction
+                timeSinceLastPause += Time.deltaTime;
+
+                if (timeSinceLastPause >= pauseDuration)
+                {
+                    // Change direction after pause
+                    isPaused = false;
+                    timeSinceLastPause = 0f;
+
+                    // Set the next direction randomly
+                    float angle = Random.Range(0f, 360f);
+                    nextDirection = Quaternion.AngleAxis(angle, Vector3.up) * Vector3.forward;
+                    isMoving = true;
+                    animator.SetBool("isMoving", isMoving);
                 }
             }
         }
-        else if (!isPaused && !anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && health > 0)
-        {
-            // Stop playing the audio when the spider is not following the character
-            if (audioSource1.isPlaying)
-            {
-                audioSource1.Stop();
-            }
-            isAgro = false;
-            anim.SetBool("agro", isAgro);
-            timeSinceLastDirectionChange += Time.deltaTime;
-            if (timeSinceLastDirectionChange >= changeDirectionDelay)
-            {
-                // Pause before changing direction
-                isPaused = true;
-                timeSinceLastPause = 0f;
-                timeSinceLastDirectionChange = 0f;
-                isMoving = false;
-                anim.SetBool("isMoving", isMoving);
-            }
-            else
-            {
-                isMoving = true;
-                anim.SetBool("isMoving", isMoving);
-            }
 
-            // Move the NPC
-            transform.Translate(nextDirection * speed * Time.deltaTime, Space.World);
-
-            // Smoothly rotate the NPC towards the next direction
-            if (nextDirection != Vector3.zero) // check if nextDirection is not zero
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(nextDirection, Vector3.up);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 360f * Time.deltaTime);
-            }
-        }
-        else if ( health > 0)
-        {
-            // Stop playing the audio when the spider is not following the character
-            if (audioSource1.isPlaying)
-            {
-                audioSource1.Stop();
-            }
-            isAgro = false;
-            anim.SetBool("agro", isAgro);
-            // Pause before changing direction
-            timeSinceLastPause += Time.deltaTime;
-
-            if (timeSinceLastPause >= pauseDuration)
-            {
-                // Change direction after pause
-                isPaused = false;
-                timeSinceLastPause = 0f;
-
-                // Set the next direction randomly
-                float angle = Random.Range(0f, 360f);
-                nextDirection = Quaternion.AngleAxis(angle, Vector3.up) * Vector3.forward;
-                isMoving = true;
-                anim.SetBool("isMoving", isMoving);
-            }
-        }
-
-        // Count the time since the last attack
+        // Update the time since last attack
         timeSinceLastAttack += Time.deltaTime;
+    }
+    public void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+        Vector3 offset = new Vector3(0.0f, 2.5f, 1.0f); // Vertical offset from the character
+        Vector3 position = transform.position + offset;
+        if (damage > 0.5)
+        {
+            damagepopup.current.CreatePopUp(position, damage.ToString(), Color.red);
+        }
+        else
+        {
+            damagepopup.current.CreatePopUp(position, damage.ToString(), Color.yellow);
+        }
+        // Play hit animation and sound
+        animator.SetTrigger("Hit");
+       // audioSource2.clip = hitSound;
+       // audioSource2.Play();
+
+        // If the NPC's health is depleted, trigger death sequence
+        if (currentHealth <= 0)
+        {
+            isAggressive = false;
+            isMoving = false;
+            animator.SetBool("isMoving", isMoving);
+            animator.SetTrigger("Die");
+            agent.isStopped = true;
+            audioSource1.Stop();
+           // audioSource2.clip = deathSound;
+           // audioSource2.Play();
+            Destroy(gameObject, 3f);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            isAggressive = true;
+            isMoving = true;
+            animator.SetBool("isMoving", isMoving);
+            audioSource1.clip = runSound;
+            audioSource1.loop = true;
+            audioSource1.Play();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            isAggressive = false;
+            isMoving = false;
+            animator.SetBool("isMoving", isMoving);
+            agent.ResetPath();
+            audioSource1.Stop();
+        }
+    }
+
+    private void ResumeMovement()
+    {
+        if (agent.isStopped && !isAttacking)
+        {
+            agent.isStopped = false;
+            if (audioSource1.clip == runSound && !audioSource1.isPlaying)
+            {
+                audioSource1.Play();
+            }
+        }
+    }
+
+    private void SetInitialDirection()
+    {
+        float angle = Random.Range(0f, 360f);
+        nextDirection = Quaternion.AngleAxis(angle, Vector3.up) * Vector3.forward;
+    }
+
+    private void StartRoaming()
+    {
+        SetInitialDirection();
+        isPaused = false;
+        timeSinceLastPause = 0f;
+        timeSinceLastDirectionChange = 0f;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // Draw the follow and attack distance spheres in the Scene view
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, followDistance);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackDistance);
     }
 
     IEnumerator AttackWithDelay(float delay)
@@ -158,13 +247,29 @@ public class NPCMovement : MonoBehaviour
         {
             audioSource1.Stop();
         }
+
+
+        // Trigger attack animation
+        //Debug.Log("rigger");
+        // Random rnd = new Random();
+        int randomNumber = UnityEngine.Random.Range(1, 3);
+        Debug.Log(randomNumber);
+        if (randomNumber == 1) 
+        {
+            animator.SetTrigger("Attack1");
+        } 
+        else if (randomNumber == 2)
+        {
+            animator.SetTrigger("Attack2");
+        }
+
+        isAttacking = true;
+
         // Play attack sound
         audioSource2.clip = attackSound;
         audioSource2.Play();
 
-        // Trigger attack animation
-        anim.SetTrigger("isAttacking");
-        isAttacking = true;
+
 
         // Inflict damage to player
         if (Vector3.Distance(transform.position, player.transform.position) < attackDistance)
@@ -182,45 +287,4 @@ public class NPCMovement : MonoBehaviour
         // Resume following the player
         agent.isStopped = false;
     }
-
-    void attack()
-    {
-        if (timeSinceLastAttack > attackInterval)
-        {
-            // Attack with a delay
-            StartCoroutine(AttackWithDelay(0.5f));
-            timeSinceLastAttack = 0f;
-        }
-    }
-
-    public void TakeDamage(float damage)
-    {
-        health -= damage;
-        GameObject character = GameObject.FindGameObjectWithTag("Enemy");
-        Vector3 offset = new Vector3(0.0f, 2.5f, 1.0f); // Vertical offset from the character
-        Vector3 position = character.transform.position + offset;
-        damagepopup.current.CreatePopUp(position, damage.ToString(), Color.yellow);
-        if (health <= 0)
-        {
-            anim.SetBool("isMoving", false);
-            anim.SetBool("isAttacking", false);
-            anim.SetBool("agro", false);
-            anim.SetBool("Hit", false);
-            anim.SetBool("isDead", true);
-            // Destroy the NPC if health is zero or less
-            Destroy(gameObject, 3f);
-        }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        // Draw a wire sphere around the NPC to indicate the attack distance
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackDistance);
-        // Draw a wire sphere around the NPC to indicate the follow distance
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, followDistance);
-    }
 }
-
-    
