@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class NPCMovement : MonoBehaviour
+public class BearScript : MonoBehaviour
+
 {
     [SerializeField] private float followDistance = 15f;
     [SerializeField] private float attackDistance = 5f;
@@ -31,7 +32,6 @@ public class NPCMovement : MonoBehaviour
     private float pauseDuration = 1f;
     private float currentHealth;
     public float PlayerHealth;
-
     private Vector3 nextDirection;
 
     private void Start()
@@ -49,7 +49,6 @@ public class NPCMovement : MonoBehaviour
         audioSource1 = GetComponent<AudioSource>();
         audioSource2 = gameObject.AddComponent<AudioSource>();
         currentHealth = maxHealth;
-
     }
 
     private void Update()
@@ -71,16 +70,15 @@ public class NPCMovement : MonoBehaviour
 
         if (isAggressive)
         {
-            CharacterMovement characterMovement = player.GetComponent<CharacterMovement>();
-            PlayerHealth = characterMovement.playerHealth;
             // Check if the player is within attack range
             if (Vector3.Distance(transform.position, player.transform.position) <= attackDistance)
             {
-
                 // Attack the player if enough time has passed since the last attack
                 if (timeSinceLastAttack >= attackInterval)
                 {
-
+                    // Start attacking with delay
+                    CharacterMovement characterMovement = player.GetComponent<CharacterMovement>();
+                    PlayerHealth = characterMovement.playerHealth;
                     // Start attacking with delay
                     if (PlayerHealth > 0)
                     {
@@ -88,12 +86,10 @@ public class NPCMovement : MonoBehaviour
                     }
                     else
                     {
+                        agent.isStopped = false;
                         animator.SetTrigger("Taunt");
                     }
                 }
-
-
-                
             }
             else
             {
@@ -101,6 +97,7 @@ public class NPCMovement : MonoBehaviour
                 {
                     // Set the destination to the player's position
                     agent.SetDestination(player.transform.position);
+
                 }
             }
         }
@@ -179,8 +176,8 @@ public class NPCMovement : MonoBehaviour
         }
         // Play hit animation and sound
         animator.SetTrigger("Hit");
-       // audioSource2.clip = hitSound;
-       // audioSource2.Play();
+        // audioSource2.clip = hitSound;
+        // audioSource2.Play();
 
         // If the NPC's health is depleted, trigger death sequence
         if (currentHealth <= 0)
@@ -191,8 +188,8 @@ public class NPCMovement : MonoBehaviour
             animator.SetTrigger("Die");
             agent.isStopped = true;
             audioSource1.Stop();
-           // audioSource2.clip = deathSound;
-           // audioSource2.Play();
+            // audioSource2.clip = deathSound;
+            // audioSource2.Play();
             Destroy(gameObject, 3f);
         }
     }
@@ -201,16 +198,13 @@ public class NPCMovement : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-
-                isAggressive = true;
-                isMoving = true;
-                animator.SetBool("isMoving", isMoving);
-                audioSource1.clip = runSound;
-                audioSource1.loop = true;
-                audioSource1.Play();
-         }
-
-        
+            isAggressive = true;
+            isMoving = true;
+            animator.SetBool("isMoving", isMoving);
+            audioSource1.clip = runSound;
+            audioSource1.loop = true;
+            audioSource1.Play();
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -276,10 +270,10 @@ public class NPCMovement : MonoBehaviour
         // Random rnd = new Random();
         int randomNumber = UnityEngine.Random.Range(1, 5);
         Debug.Log(randomNumber);
-        if (randomNumber == 1) 
+        if (randomNumber == 1)
         {
             animator.SetTrigger("Attack1");
-        } 
+        }
         else if (randomNumber == 2)
         {
             animator.SetTrigger("Attack2");
