@@ -9,6 +9,10 @@ TagManager:
   - Enemy
   - snow
   - Heal
+  - FreezeCircle
+  - IceSlash
+  - FireSlash
+  - HellCircle
   layers:
   - Default
   - TransparentFX

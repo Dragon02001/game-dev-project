@@ -11,31 +11,32 @@ public class AOE : MonoBehaviour
 
     public KeyCode keyToInstantiatePrefab2;
     public GameObject prefabToInstantiateD;
-
+    public GameObject prefabToInstantiateE;
     public Vector3 offset;
     public Vector3 spawnPosition;
 
     public float timeToDestroy1;
     public float timeToDestroy2 = 0.5f;
-    public int Ability;
+    public int SideAbility;
+    public int UltAbility;
     public GameObject newObject;
     void Update()
     {
         if (Input.GetKey(keyToInstantiatePrefab1))
         {
-            if (Ability == 1)
+            if (UltAbility == 1)
             {
                 position();
                 newObject = Instantiate(prefabToInstantiateA, spawnPosition, Quaternion.identity);
                 Destroy(newObject, timeToDestroy1);
             }
-            else if (Ability == 2)
+            else if (UltAbility == 2)
             {
                 position();
                 newObject = Instantiate(prefabToInstantiateB, spawnPosition, Quaternion.identity);
                 Destroy(newObject, timeToDestroy1);
             }
-            else if (Ability == 3)
+            else if (UltAbility == 3)
             {
                 position();
                 newObject = Instantiate(prefabToInstantiateC, spawnPosition, Quaternion.identity);
@@ -44,11 +45,21 @@ public class AOE : MonoBehaviour
         }
         if (Input.GetKey(keyToInstantiatePrefab2))
         {
-            if (Ability == 1)
+            if (SideAbility == 1)
             {
                 position();
                 Quaternion spawnRotation = transform.rotation;
                 newObject = Instantiate(prefabToInstantiateD, spawnPosition, spawnRotation);
+
+                move();
+
+                Destroy(newObject, timeToDestroy2);
+            }
+            if (SideAbility == 2)
+            {
+                position();
+                Quaternion spawnRotation = transform.rotation;
+                newObject = Instantiate(prefabToInstantiateE, spawnPosition, spawnRotation);
 
                 move();
 

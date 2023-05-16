@@ -20,6 +20,9 @@ public class NPCMovement : MonoBehaviour
     [SerializeField] private AudioSource audioSource1;
     [SerializeField] private AudioSource audioSource2;
 
+    private bool isTriggered = false;
+    private bool ultTrigger = false;
+    private bool sideTrigger = false;
     private bool Alive = true;
     private bool Freeze = false;
     private bool isMoving = false;
@@ -27,7 +30,7 @@ public class NPCMovement : MonoBehaviour
     private bool isAggressive = false;
     private bool isHit = false;
     private bool isPaused = false;
-
+    private bool onFire = false;
     private float timeSinceLastAttack = 0f;
     private float timeSinceLastDirectionChange = 0f;
     private float timeSinceLastPause = 0f;
@@ -35,6 +38,8 @@ public class NPCMovement : MonoBehaviour
     private float pauseDuration = 1f;
     private float currentHealth;
     public float PlayerHealth;
+    public int Fire;
+    public int Ice;
 
     private Vector3 nextDirection;
   
@@ -208,67 +213,160 @@ public class NPCMovement : MonoBehaviour
     }
     public void TakeDamage(float damage)
     {
-        currentHealth -= damage;
-        Vector3 offset = new Vector3(0.0f, 2.5f, 1.0f); // Vertical offset from the character
-        Vector3 position = transform.position + offset;
-        if (damage > 0.5)
+        if (currentHealth > 0)
         {
-            damagepopup.current.CreatePopUp(position, damage.ToString(), Color.red);
+            currentHealth -= damage;
+            Vector3 offset = new Vector3(0.0f, 2.5f, 1.0f); // Vertical offset from the character
+            Vector3 position = transform.position + offset;
+            damage = damage * 100;
+            if (damage > 50)
+            {
+                damagepopup.current.CreatePopUp(position, damage.ToString(), Color.red);
+            }
+            else
+            {
+                damagepopup.current.CreatePopUp(position, damage.ToString(), Color.yellow);
+            }
+            // Play hit animation and sound
+            //animator.SetTrigger("Hit");
+            // audioSource2.clip = hitSound;
+            // audioSource2.Play();
         }
-        else
-        {
-            damagepopup.current.CreatePopUp(position, damage.ToString(), Color.yellow);
-        }
-        // Play hit animation and sound
-        //animator.SetTrigger("Hit");
-       // audioSource2.clip = hitSound;
-       // audioSource2.Play();
-
         // If the NPC's health is depleted, trigger death sequence
+
         if (currentHealth <= 0)
         {
-            Alive = false;
-            isAggressive = false;
-            isMoving = false;
-            animator.SetBool("isMoving", isMoving);
-            animator.SetTrigger("Die");
-            agent.isStopped = true;
-            audioSource1.Stop();
-           // audioSource2.clip = deathSound;
-           // audioSource2.Play();
-            Destroy(gameObject, 3f);
+            if (Alive == true)
+            {
+                Alive = false;
+                isAggressive = false;
+                isMoving = false;
+                animator.SetBool("isMoving", isMoving);
+                animator.SetTrigger("Die");
+                agent.isStopped = true;
+                audioSource1.Stop();
+                // audioSource2.clip = deathSound;
+                // audioSource2.Play();
+                Destroy(gameObject, 3f);
+            }
         }
+        Debug.Log(currentHealth);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-
-        if (other.tag == "snow")
+        
+        if (other.tag == "FreezeCircle" && !ultTrigger)
         {
+            Ice = 2;
+            ultTrigger = true;
             Debug.Log("its cold");
-            Freeze = true; 
-        isMoving = false;
-            animator.SetBool("isMoving", isMoving);
-            if (audioSource1.isPlaying)
-            {
-                audioSource1.Stop();
-            }
-            Invoke("RestoreAgentSpeed", 4f); // Restore agent speed after 4 seconds
+            FreezeNpc();
+            TakeDamage(0.5f);
+            
+        }
+        if (other.tag == "IceSlash" && !sideTrigger)
+        {
+            Ice = 1;
+            sideTrigger = true;
+            Debug.Log("its cold");
+            FreezeNpc();
+            TakeDamage(0.3f);
+            
+        }
+ 
+        if (other.tag == "FireSlash" && !sideTrigger)
+        {
+            Fire = 1;
+            sideTrigger = true;
+            Debug.Log("its Hot");
+            onFireNPC();
+
+
+        }
+        if (other.tag == "HellCircle" && !ultTrigger)
+        {
+            Fire = 2;
+            ultTrigger = true;
+            Debug.Log("its Hot");
+            onFireNPC();
+
         }
 
 
-
-
     }
-
-    void RestoreAgentSpeed()
+    //******************************
+    void restoreUlt()
+    {
+        ultTrigger = false;
+    }
+    void restoreSide()
+    {
+        sideTrigger = false;
+    }
+    //Fire Methods
+    void NotOnFire()
+    {
+        onFire = false;
+        
+    }
+    void onFireNPC()
+    {
+        onFire = true;
+        if (Fire == 1)
+        {
+            burn();
+            Invoke("restoreSide", 3f); // Restore trigger
+        }
+        if (Fire == 2)
+        {
+            evaporate();
+            Invoke("restoreUlt", 3f); // Restore trigger
+        }
+        Invoke("NotOnFire", 3f); // Remove burn effect
+    }
+    void evaporate()
+    {
+        if (onFire == true)
+        {
+            TakeDamage(0.05f);
+            Invoke("evaporate", 0.25f);
+        }
+    }
+    void burn()
+    {
+        if (onFire == true)
+        {
+            TakeDamage(0.25f);
+            Invoke("burn", 1.1f);
+        }
+    }
+    //Ice Methods
+    void UnFreeze()
     {
         Freeze = false;
-
     }
-
-
-
+    void FreezeNpc()//freezes fir 4 seconds
+    {
+        Freeze = true;
+        isMoving = false;
+        animator.SetBool("isMoving", isMoving);
+        if (audioSource1.isPlaying)
+        {
+            audioSource1.Stop();
+        }
+        if (Ice == 1)
+        {
+            Invoke("restoreSide", 4f); // Restore agent speed after 4 seconds
+        }
+        if (Ice == 2)
+        {
+            Invoke("restoreUlt", 4f); // Restore agent speed after 4 seconds
+        }
+            
+        Invoke("UnFreeze", 4f); // unfreeze npc
+    }
+    //*****************************
     private void ResumeMovement()
     {
         if (agent.isStopped && !isAttacking)
