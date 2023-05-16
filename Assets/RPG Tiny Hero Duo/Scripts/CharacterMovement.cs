@@ -25,8 +25,8 @@ public class CharacterMovement : MonoBehaviour
     private bool isJumping = false;
     private bool isRunning = false;
 
-    
 
+    public float MaxHealth = 1.0f;
     public float playerHealth = 1.0f;
 
     private bool isDead = false;
@@ -242,5 +242,18 @@ public class CharacterMovement : MonoBehaviour
             Debug.Log("Dead");
             // Die();
         }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+
+        if (other.tag == "Heal")
+        {
+            Debug.Log("Im healed");
+            playerHealth = MaxHealth;
+        }
+
+
+
+
     }
 }

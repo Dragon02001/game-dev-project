@@ -7,6 +7,8 @@ TagManager:
   - Ground
   - Gem
   - Enemy
+  - snow
+  - Heal
   layers:
   - Default
   - TransparentFX
