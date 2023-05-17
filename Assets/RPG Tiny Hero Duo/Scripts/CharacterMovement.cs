@@ -9,8 +9,8 @@ public class CharacterMovement : MonoBehaviour
     public float speed = 5.0f;
     public float rotationSpeed = 100.0f;
     public Transform cameraTransform; // Reference to the camera's transform
-
-    public AudioClip attackSound;
+    
+    
     public AudioClip deathSound;
     public AudioClip jumpSound;
     public AudioClip victorySound;
@@ -18,14 +18,14 @@ public class CharacterMovement : MonoBehaviour
     public AudioClip dizzySound;
     private AudioSource audioSource;
 
-    private Animator animator;
+    public Animator animator;
     private bool isWalking = false;
-    private bool isAttacking = false;
+    public bool isAttacking = false;
     private bool isDefending = false;
     private bool isJumping = false;
     private bool isRunning = false;
 
-    private float lastAttackTime = 0.0f;
+    
 
     public float playerHealth = 1.0f;
 
@@ -34,6 +34,8 @@ public class CharacterMovement : MonoBehaviour
     public float playerStamina = 1.0f;
 
     public float maxStamina = 1.0f;
+
+
 
     void Start()
     {
@@ -66,21 +68,7 @@ public class CharacterMovement : MonoBehaviour
             // Set the walking parameter in the animator controller based on whether the character is walking or not
             animator.SetBool("isWalking", isWalking);
 
-            // Set the attacking parameter in the animator controller based on whether the character is attacking or not
-            if (Input.GetKeyDown(KeyCode.E) && Time.time - lastAttackTime > 1.0f && playerStamina > 0.0f) // 1 second cooldown
-            {
-                audioSource.PlayOneShot(attackSound);
-                isAttacking = true;
-                lastAttackTime = Time.time;
-                playerStamina -= 0.1f;
-            }
-            if (Input.GetKeyUp(KeyCode.E))
-            {
-                isAttacking = false;
-                audioSource.Stop();
-            }
-            animator.SetBool("isAttacking", isAttacking);
-
+         
             // Set the defending parameter in the animator controller based on whether the character is defending or not
             if (Input.GetKeyDown(KeyCode.Q) && playerStamina > 0.0f)
             {
@@ -197,7 +185,7 @@ public class CharacterMovement : MonoBehaviour
                         isDefending = false;
 
                         speed = 5.0f;
-                        audioSource.PlayOneShot(dizzySound);
+                       // audioSource.PlayOneShot(dizzySound);
                     }
                 }
                 else
@@ -214,7 +202,7 @@ public class CharacterMovement : MonoBehaviour
 
             void UpdateStamina2()
             {
-                if(playerStamina <= 0.0f)
+                if (playerStamina <= 0.0f)
                 {
                     // Play the animation
                     animator.SetBool("isDizzy", true);
@@ -241,6 +229,18 @@ public class CharacterMovement : MonoBehaviour
                 playerStamina = maxStamina;
                 speed = isRunning ? 8.0f : 5.0f;
             }
+
+        }
+    }
+    public void TakeDamage(float amount)
+    {
+        playerHealth -= amount;
+       // Debug.Log(playerHealth);
+
+        if (playerHealth <= 0)
+        {
+            Debug.Log("Dead");
+            // Die();
         }
     }
 }
