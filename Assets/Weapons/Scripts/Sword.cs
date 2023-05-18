@@ -13,6 +13,8 @@ public class Sword : MonoBehaviour
     public AudioClip SpinningAttackSound;
     private AudioSource audioSource;
     public Stamina stamina;
+    private bool highDamage = false;
+    float damage;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +25,7 @@ public class Sword : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && cm.playerStamina > 0.0f)
+        if (Input.GetMouseButtonDown(0) && cm.playerStamina > 0.0f)
         {
             cm.isAttacking = true;
             //Debug.Log(comboCount);
@@ -36,7 +38,7 @@ public class Sword : MonoBehaviour
                 lastComboAttackTime = Time.time;
                 cm.playerStamina -= 0.1f;
                 audioSource.PlayOneShot(attackSound);
-
+                damage = Random.Range(0.1f, 0.3f);
 
             }
             else if (comboCount == 1 && Time.time - lastComboAttackTime < 1f && cm.playerStamina > 0.1f)
@@ -46,13 +48,16 @@ public class Sword : MonoBehaviour
                 lastComboAttackTime = Time.time;
                 cm.playerStamina -= 0.1f;
                 audioSource.PlayOneShot(attackSound);
+                damage = Random.Range(0.3f, 0.5f);
 
             }
-            else if (comboCount == 2 && cm.playerStamina > 0.3f)
+            else if (comboCount == 2 && cm.playerStamina > 0.1f)
             {
                 cm.animator.SetTrigger("combo3");
-                cm.playerStamina -= 0.3f;
+                cm.playerStamina -= 0.1f;
                 audioSource.PlayOneShot(SpinningAttackSound);
+                highDamage = true;
+                damage = Random.Range(0.5f, 0.8f);
             }
             else
             {
@@ -79,7 +84,7 @@ public class Sword : MonoBehaviour
             cm.isAttacking = false;
         }
 
-        if (Input.GetKeyUp(KeyCode.E))
+        if (Input.GetMouseButtonUp(0))
         {
             cm.isAttacking = false;
            // StartCoroutine(WaitAndSetAttacking(0.5f)); // Wait for 0.5 seconds before setting isAttacking to false
@@ -105,15 +110,8 @@ public class Sword : MonoBehaviour
             NPCMovement enemy = other.GetComponent<NPCMovement>(); //Retrieve the NPCMovement component from the GameObject
             if (enemy != null)
             {
-                float damage;
-                if (comboCount == 2)
-                {
-                    damage = Random.Range(0.5f, 0.8f);
-                }
-                else
-                {
-                    damage = Random.Range(0.3f, 0.5f);
-                }
+               
+
                 float roundedDamage = Mathf.Round(damage * 100f) / 100f; // round to two decimal places
                 enemy.TakeDamage(roundedDamage);
             }

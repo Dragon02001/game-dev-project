@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AOE : MonoBehaviour
 {
+  
     public KeyCode keyToInstantiatePrefab1;
     public GameObject prefabToInstantiateA;
     public GameObject prefabToInstantiateB;
@@ -20,50 +21,73 @@ public class AOE : MonoBehaviour
     public int SideAbility;
     public int UltAbility;
     public GameObject newObject;
+    private float lastInstantiationUltTime = -Mathf.Infinity; // Initialize to a negative infinity to allow instantiating the first object immediately.
+    private float UltcooldownTime = 10f;
+    private float lastInstantiationSideTime = -Mathf.Infinity; // Initialize to a negative infinity to allow instantiating the first object immediately.
+    private float SidecooldownTime = 3f;
+    public CharacterMovement cm;
+    void start()
+    {
+
+    }
     void Update()
     {
         if (Input.GetKey(keyToInstantiatePrefab1))
         {
-            if (UltAbility == 1)
+            if (Time.time - lastInstantiationUltTime >= UltcooldownTime)
             {
-                position();
-                newObject = Instantiate(prefabToInstantiateA, spawnPosition, Quaternion.identity);
-                Destroy(newObject, timeToDestroy1);
-            }
-            else if (UltAbility == 2)
-            {
-                position();
-                newObject = Instantiate(prefabToInstantiateB, spawnPosition, Quaternion.identity);
-                Destroy(newObject, timeToDestroy1);
-            }
-            else if (UltAbility == 3)
-            {
-                position();
-                newObject = Instantiate(prefabToInstantiateC, spawnPosition, Quaternion.identity);
-                Destroy(newObject, timeToDestroy1);
+                lastInstantiationUltTime = Time.time; // Record the time the object was instantiated.
+                
+                if (UltAbility == 1)
+                {
+                    position();
+                    newObject = Instantiate(prefabToInstantiateA, spawnPosition, Quaternion.identity);
+                    Destroy(newObject, timeToDestroy1);
+                }
+                else if (UltAbility == 2)
+                {
+                    position();
+                    newObject = Instantiate(prefabToInstantiateB, spawnPosition, Quaternion.identity);
+                    Destroy(newObject, timeToDestroy1);
+                }
+                else if (UltAbility == 3)
+                {
+                    position();
+                    newObject = Instantiate(prefabToInstantiateC, spawnPosition, Quaternion.identity);
+                    Destroy(newObject, timeToDestroy1);
+                }
             }
         }
+    
+
         if (Input.GetKey(keyToInstantiatePrefab2))
         {
-            if (SideAbility == 1)
+
+            if (Time.time - lastInstantiationSideTime >= SidecooldownTime)
             {
-                position();
-                Quaternion spawnRotation = transform.rotation;
-                newObject = Instantiate(prefabToInstantiateD, spawnPosition, spawnRotation);
 
-                move();
+                lastInstantiationSideTime = Time.time; // Record the time the object was instantiated.
+                cm.animator.SetTrigger("combo1");
+                if (SideAbility == 1)
+                {
+                    position();
+                    Quaternion spawnRotation = transform.rotation;
+                    newObject = Instantiate(prefabToInstantiateD, spawnPosition, spawnRotation);
 
-                Destroy(newObject, timeToDestroy2);
-            }
-            if (SideAbility == 2)
-            {
-                position();
-                Quaternion spawnRotation = transform.rotation;
-                newObject = Instantiate(prefabToInstantiateE, spawnPosition, spawnRotation);
+                    move();
 
-                move();
+                    Destroy(newObject, timeToDestroy2);
+                }
+                else if (SideAbility == 2)
+                {
+                    position();
+                    Quaternion spawnRotation = transform.rotation;
+                    newObject = Instantiate(prefabToInstantiateE, spawnPosition, spawnRotation);
 
-                Destroy(newObject, timeToDestroy2);
+                    move();
+
+                    Destroy(newObject, timeToDestroy2);
+                }
             }
         }
     }

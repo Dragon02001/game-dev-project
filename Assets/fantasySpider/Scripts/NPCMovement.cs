@@ -9,11 +9,12 @@ public class NPCMovement : MonoBehaviour
   
     [SerializeField] private float followDistance = 15f;
     [SerializeField] private float attackDistance = 5f;
-    [SerializeField] private float attackInterval = 1f;
+    [SerializeField] private float attackInterval = 2.5f;
     [SerializeField] private float maxHealth = 1f;
     [SerializeField] private float speed = 5f;
     [SerializeField] private AudioClip runSound;
     [SerializeField] private AudioClip attackSound;
+    [SerializeField] private AudioClip defendedSound;
     [SerializeField] private Animator animator;
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private GameObject player;
@@ -74,7 +75,7 @@ public class NPCMovement : MonoBehaviour
            {
             if (isAttacking)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") || !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack2") || !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack3") || !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack4"))
                 {
                     isAttacking = false;
                     timeSinceLastAttack = 0f;
@@ -435,10 +436,8 @@ public class NPCMovement : MonoBehaviour
 
         isAttacking = true;
 
-        // Play attack sound
-        audioSource2.clip = attackSound;
-        audioSource2.Play();
 
+ 
 
 
         // Inflict damage to player
@@ -448,7 +447,22 @@ public class NPCMovement : MonoBehaviour
             if (character != null)
             {
                 CharacterMovement characterMovement = character.GetComponent<CharacterMovement>();
-                characterMovement.TakeDamage(0.1f);
+                if (!characterMovement.isDefending) 
+                {
+                    audioSource2.clip = attackSound;
+                    audioSource2.Play();
+                    characterMovement.animator.SetTrigger("isHit");
+                }
+                else
+                {
+                    Debug.Log("is defending");
+                    audioSource2.clip = defendedSound;
+                    audioSource2.Play();
+                    characterMovement.animator.SetTrigger("isHitDefending");
+                }
+                float dmg = Random.Range(0.1f, 0.2f);
+                float roundedDamage = Mathf.Round(dmg * 100f) / 100f; // round to two decimal places
+                characterMovement.TakeDamage(roundedDamage);
             }
         }
 

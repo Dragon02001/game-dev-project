@@ -21,7 +21,7 @@ public class CharacterMovement : MonoBehaviour
     public Animator animator;
     private bool isWalking = false;
     public bool isAttacking = false;
-    private bool isDefending = false;
+    public bool isDefending = false;
     private bool isJumping = false;
     private bool isRunning = false;
 
@@ -35,10 +35,16 @@ public class CharacterMovement : MonoBehaviour
 
     public float maxStamina = 1.0f;
 
-
-
+    private Rigidbody rb;
+    private bool isGrounded = true; // Initialize to true if the character starts on the ground
+    public float jumpForce = 200f; // Adjust the value as needed
+    public float groundCheckDistance = 0.1f;
+    public LayerMask groundLayer;
+    public LineRenderer raycastDebugLine;
+    public Vector3 raycastOffset = new Vector3(0f, 1f, 0f);
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
     }
@@ -47,6 +53,14 @@ public class CharacterMovement : MonoBehaviour
     {
         if (!isDead)
         {
+            isGrounded = Physics.Raycast(transform.position + raycastOffset, Vector3.down, out RaycastHit hit, groundCheckDistance, groundLayer);
+
+
+            // Visualize the raycast using the LineRenderer
+            //raycastDebugLine.SetPosition(0, transform.position + raycastOffset);
+            //raycastDebugLine.SetPosition(1, transform.position + raycastOffset + Vector3.down * groundCheckDistance);
+
+
             UpdateStamina();
 
             // Move the character forward or backward when the user presses the W or S key
@@ -68,25 +82,28 @@ public class CharacterMovement : MonoBehaviour
             // Set the walking parameter in the animator controller based on whether the character is walking or not
             animator.SetBool("isWalking", isWalking);
 
-         
+
             // Set the defending parameter in the animator controller based on whether the character is defending or not
-            if (Input.GetKeyDown(KeyCode.Q) && playerStamina > 0.0f)
+            if (Input.GetMouseButtonDown(1)) // 1 represents the right mouse button
             {
                 isDefending = true;
-                playerStamina -= 0.1f;
             }
-            if (Input.GetKeyUp(KeyCode.Q))
+
+            if (Input.GetMouseButtonUp(1)) // 1 represents the right mouse button
             {
                 isDefending = false;
             }
             animator.SetBool("isDefending", isDefending);
 
             // Set the jumping parameter in the animator controller based on whether the character is jumping or not
-            if (Input.GetKeyDown(KeyCode.Space) && playerStamina > 0.0f)
+            if (Input.GetKeyDown(KeyCode.Space) && isGrounded && playerStamina > 0.0f)
             {
                 audioSource.PlayOneShot(jumpSound);
                 isJumping = true;
+                isGrounded = false;
                 playerStamina -= 0.1f;
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
             }
             if (Input.GetKeyUp(KeyCode.Space))
             {
@@ -172,7 +189,7 @@ public class CharacterMovement : MonoBehaviour
 
             void UpdateStamina()
             {
-                if (isRunning || isAttacking || isDefending || isJumping)
+                if (isRunning || isAttacking  || isJumping)
                 {
                     playerStamina -= 0.1f * Time.deltaTime;
                     if (playerStamina < 0.0f)
@@ -234,8 +251,24 @@ public class CharacterMovement : MonoBehaviour
     }
     public void TakeDamage(float amount)
     {
+        if (isDefending)
+        {
+            amount = amount / 2;
+        }
         playerHealth -= amount;
-       // Debug.Log(playerHealth);
+        // Debug.Log(playerHealth);
+
+        Vector3 offset = new Vector3(0.0f, 2.5f, 1.0f); // Vertical offset from the character
+        Vector3 position = transform.position + offset;
+        amount = amount * 100;
+        if (amount > 50)
+        {
+            damagepopup.current.CreatePopUp(position, amount.ToString(), Color.red);
+        }
+        else
+        {
+            damagepopup.current.CreatePopUp(position, amount.ToString(), Color.yellow);
+        }
 
         if (playerHealth <= 0)
         {
