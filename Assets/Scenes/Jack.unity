@@ -7883,7 +7883,10 @@ MonoBehaviour:
   Health: 1
   playerStamina: 1
   maxStamina: 1
-  jumpForce: 200
+  maxJumps: 2
+  jumpForce1: 300
+  jumpForce2: 400
+  jumpForce3: 1000
   groundCheckDistance: 1
   groundLayer:
     serializedVersion: 2

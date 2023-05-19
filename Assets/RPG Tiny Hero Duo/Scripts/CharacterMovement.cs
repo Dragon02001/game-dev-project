@@ -34,11 +34,14 @@ public class CharacterMovement : MonoBehaviour
     public float playerStamina = 1.0f;
 
     public float maxStamina = 1.0f;
-
+    public int maxJumps = 2;
+    private int jumpsRemaining;
     private Rigidbody rb;
     private bool isGrounded = true; // Initialize to true if the character starts on the ground
-    public float jumpForce = 200f; // Adjust the value as needed
-    public float groundCheckDistance = 0.1f;
+    public float jumpForce1 = 200f; // Adjust the value as needed
+    public float jumpForce2 = 300f; // Adjust the value as needed
+    public float jumpForce3 = 500f; // Adjust the value as needed
+    public float groundCheckDistance = 0.05f;
     public LayerMask groundLayer;
     public LineRenderer raycastDebugLine;
     public Vector3 raycastOffset = new Vector3(0f, 1f, 0f);
@@ -47,6 +50,7 @@ public class CharacterMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
+        jumpsRemaining = maxJumps;
     }
 
     void Update()
@@ -54,7 +58,7 @@ public class CharacterMovement : MonoBehaviour
         if (!isDead)
         {
             isGrounded = Physics.Raycast(transform.position + raycastOffset, Vector3.down, out RaycastHit hit, groundCheckDistance, groundLayer);
-
+            Debug.Log(isGrounded);
 
             // Visualize the raycast using the LineRenderer
             //raycastDebugLine.SetPosition(0, transform.position + raycastOffset);
@@ -64,24 +68,27 @@ public class CharacterMovement : MonoBehaviour
             UpdateStamina();
 
             // Move the character forward or backward when the user presses the W or S key
-            float moveHorizontal = Input.GetAxis("Horizontal");
-            float moveVertical = Input.GetAxis("Vertical");
-
-            if (moveVertical != 0 || moveHorizontal != 0)
+            if (isGrounded)
             {
-                Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-                movement = Quaternion.Euler(0.0f, transform.rotation.eulerAngles.y, 0.0f) * movement;
-                transform.Translate(movement * speed * Time.deltaTime, Space.World);
-                isWalking = true;
-            }
-            else
-            {
-                isWalking = false;
-            }
+                jumpsRemaining = maxJumps;
+                float moveHorizontal = Input.GetAxis("Horizontal");
+                float moveVertical = Input.GetAxis("Vertical");
 
-            // Set the walking parameter in the animator controller based on whether the character is walking or not
-            animator.SetBool("isWalking", isWalking);
+                if (moveVertical != 0 || moveHorizontal != 0)
+                {
+                    Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+                    movement = Quaternion.Euler(0.0f, transform.rotation.eulerAngles.y, 0.0f) * movement;
+                    transform.Translate(movement * speed * Time.deltaTime, Space.World);
+                    isWalking = true;
+                }
+                else
+                {
+                    isWalking = false;
+                }
 
+                // Set the walking parameter in the animator controller based on whether the character is walking or not
+                animator.SetBool("isWalking", isWalking);
+            }
 
             // Set the defending parameter in the animator controller based on whether the character is defending or not
             if (Input.GetMouseButtonDown(1)) // 1 represents the right mouse button
@@ -96,21 +103,48 @@ public class CharacterMovement : MonoBehaviour
             animator.SetBool("isDefending", isDefending);
 
             // Set the jumping parameter in the animator controller based on whether the character is jumping or not
-            if (Input.GetKeyDown(KeyCode.Space) && isGrounded && playerStamina > 0.0f)
+            if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || jumpsRemaining > 0) && playerStamina > 0.0f)
             {
-                audioSource.PlayOneShot(jumpSound);
-                isJumping = true;
-                isGrounded = false;
-                playerStamina -= 0.1f;
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                isWalking = false;
+            animator.SetBool("isWalking", isWalking);
+            Debug.Log("jumps" + jumpsRemaining);
+                if (jumpsRemaining == 2)
+                {
+                    animator.SetTrigger("isJumping1");
+                    audioSource.PlayOneShot(jumpSound);
+                    isJumping = true;
+                    isGrounded = false;
+                    playerStamina -= 0.1f;
+                    rb.AddForce(Vector3.up * jumpForce1, ForceMode.Impulse);
+                    // Get the forward direction of the player object
+                    Vector3 playerForward = transform.forward;
 
+                    // Apply the jump force in the forward direction
+                    rb.AddForce(playerForward * jumpForce3, ForceMode.Impulse);
+                    Invoke("reduceJump", 0.1f);
+                    Debug.Log(isGrounded);
+                }
+                else
+                {
+                    animator.SetTrigger("isJumping2");
+                    audioSource.PlayOneShot(jumpSound);
+                    isJumping = true;
+                    isGrounded = false;
+                    playerStamina -= 0.1f;
+                    rb.AddForce(Vector3.up * jumpForce2, ForceMode.Impulse);
+                    Invoke("reduceJump", 0.1f);
+                    Debug.Log(isGrounded);
+                }
+                
+              
+                
             }
             if (Input.GetKeyUp(KeyCode.Space))
             {
                 isJumping = false;
                 audioSource.Stop();
             }
-            animator.SetBool("isJumping", isJumping);
+            
 
             // Set the running parameter in the animator controller based on whether the character is running or not
             if (Input.GetKeyDown(KeyCode.LeftShift) && playerStamina > 0.0f)
@@ -186,7 +220,7 @@ public class CharacterMovement : MonoBehaviour
                 animator.SetBool("isDead", true); //Play dead animation
                 audioSource.PlayOneShot(deathSound);
             }
-
+            
             void UpdateStamina()
             {
                 if (isRunning || isAttacking  || isJumping)
@@ -288,5 +322,9 @@ public class CharacterMovement : MonoBehaviour
 
 
 
+    }
+    private void reduceJump()
+    {
+        jumpsRemaining--;
     }
 }
