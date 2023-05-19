@@ -27,7 +27,7 @@ public class CharacterMovement : MonoBehaviour
 
 
     public float MaxHealth = 1.0f;
-    public float playerHealth = 1.0f;
+    public float Health = 1.0f;
 
     private bool isDead = false;
 
@@ -144,7 +144,7 @@ public class CharacterMovement : MonoBehaviour
             {
                 animator.SetBool("isVictorious", true); //Play victory animation
                 audioSource.PlayOneShot(victorySound);
-                playerHealth = 1f;
+                Health = 1f;
             }
             else if (Input.GetKeyUp(KeyCode.O))
             {
@@ -157,10 +157,10 @@ public class CharacterMovement : MonoBehaviour
                 if (isDefending)
                 {
                     animator.SetBool("isHitDefending", true);
-                    playerHealth -= 0.05f; //Reduce the damage when defending
+                    Health -= 0.05f; //Reduce the damage when defending
 
                     //Check if the player's health is below zero
-                    if (playerHealth <= 0)
+                    if (Health <= 0)
                     {
                         isDead = true;
                         animator.SetBool("isDead", true); //Play dead animation
@@ -170,7 +170,7 @@ public class CharacterMovement : MonoBehaviour
                 else
                 {
                     animator.SetBool("isHit", true);
-                    playerHealth -= 0.1f;
+                    Health -= 0.1f;
                 }
             }
             else if (Input.GetKeyUp(KeyCode.I))
@@ -180,7 +180,7 @@ public class CharacterMovement : MonoBehaviour
             }
 
             // Update the player's health
-            if (playerHealth <= 0)
+            if (Health <= 0)
             {
                 isDead = true;
                 animator.SetBool("isDead", true); //Play dead animation
@@ -255,8 +255,8 @@ public class CharacterMovement : MonoBehaviour
         {
             amount = amount / 2;
         }
-        playerHealth -= amount;
-        // Debug.Log(playerHealth);
+        Health -= amount;
+        // Debug.Log(Health);
 
         Vector3 offset = new Vector3(0.0f, 2.5f, 1.0f); // Vertical offset from the character
         Vector3 position = transform.position + offset;
@@ -270,7 +270,7 @@ public class CharacterMovement : MonoBehaviour
             damagepopup.current.CreatePopUp(position, amount.ToString(), Color.yellow);
         }
 
-        if (playerHealth <= 0)
+        if (Health <= 0)
         {
             Debug.Log("Dead");
             // Die();
@@ -282,7 +282,7 @@ public class CharacterMovement : MonoBehaviour
         if (other.tag == "Heal")
         {
             Debug.Log("Im healed");
-            playerHealth = MaxHealth;
+            Health = MaxHealth;
         }
 
 

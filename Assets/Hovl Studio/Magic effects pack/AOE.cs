@@ -13,6 +13,7 @@ public class AOE : MonoBehaviour
     public KeyCode keyToInstantiatePrefab2;
     public GameObject prefabToInstantiateD;
     public GameObject prefabToInstantiateE;
+    public GameObject prefabToInstantiateF;
     public Vector3 offset;
     public Vector3 spawnPosition;
 
@@ -83,6 +84,16 @@ public class AOE : MonoBehaviour
                     position();
                     Quaternion spawnRotation = transform.rotation;
                     newObject = Instantiate(prefabToInstantiateE, spawnPosition, spawnRotation);
+
+                    move();
+
+                    Destroy(newObject, timeToDestroy2);
+                }
+                else if (SideAbility == 3)
+                {
+                    position();
+                    Quaternion spawnRotation = transform.rotation;
+                    newObject = Instantiate(prefabToInstantiateF, spawnPosition, spawnRotation);
 
                     move();
 
