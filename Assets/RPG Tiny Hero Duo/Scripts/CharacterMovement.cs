@@ -41,7 +41,7 @@ public class CharacterMovement : MonoBehaviour
     public float jumpForce1 = 200f; // Adjust the value as needed
     public float jumpForce2 = 300f; // Adjust the value as needed
     public float jumpForce3 = 500f; // Adjust the value as needed
-    public float groundCheckDistance = 0.05f;
+    public float groundCheckDistance = 0.01f;
     public LayerMask groundLayer;
     public LineRenderer raycastDebugLine;
     public Vector3 raycastOffset = new Vector3(0f, 1f, 0f);
@@ -61,8 +61,8 @@ public class CharacterMovement : MonoBehaviour
             Debug.Log(isGrounded);
 
             // Visualize the raycast using the LineRenderer
-            //raycastDebugLine.SetPosition(0, transform.position + raycastOffset);
-            //raycastDebugLine.SetPosition(1, transform.position + raycastOffset + Vector3.down * groundCheckDistance);
+            raycastDebugLine.SetPosition(0, transform.position + raycastOffset);
+            raycastDebugLine.SetPosition(1, transform.position + raycastOffset + Vector3.down * groundCheckDistance);
 
 
             UpdateStamina();
@@ -71,6 +71,7 @@ public class CharacterMovement : MonoBehaviour
             if (isGrounded)
             {
                 jumpsRemaining = maxJumps;
+            }
                 float moveHorizontal = Input.GetAxis("Horizontal");
                 float moveVertical = Input.GetAxis("Vertical");
 
@@ -79,7 +80,10 @@ public class CharacterMovement : MonoBehaviour
                     Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
                     movement = Quaternion.Euler(0.0f, transform.rotation.eulerAngles.y, 0.0f) * movement;
                     transform.Translate(movement * speed * Time.deltaTime, Space.World);
-                    isWalking = true;
+                    if (isGrounded)
+                    {
+                        isWalking = true;
+                    }
                 }
                 else
                 {
@@ -88,7 +92,7 @@ public class CharacterMovement : MonoBehaviour
 
                 // Set the walking parameter in the animator controller based on whether the character is walking or not
                 animator.SetBool("isWalking", isWalking);
-            }
+            
 
             // Set the defending parameter in the animator controller based on whether the character is defending or not
             if (Input.GetMouseButtonDown(1)) // 1 represents the right mouse button
@@ -106,7 +110,8 @@ public class CharacterMovement : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || jumpsRemaining > 0) && playerStamina > 0.0f)
             {
                 isWalking = false;
-            animator.SetBool("isWalking", isWalking);
+                isRunning = false;
+                animator.SetBool("isWalking", isWalking);
             Debug.Log("jumps" + jumpsRemaining);
                 if (jumpsRemaining == 2)
                 {
@@ -121,7 +126,7 @@ public class CharacterMovement : MonoBehaviour
 
                     // Apply the jump force in the forward direction
                     rb.AddForce(playerForward * jumpForce3, ForceMode.Impulse);
-                    Invoke("reduceJump", 0.1f);
+                    jumpsRemaining--;
                     Debug.Log(isGrounded);
                 }
                 else
@@ -132,7 +137,7 @@ public class CharacterMovement : MonoBehaviour
                     isGrounded = false;
                     playerStamina -= 0.1f;
                     rb.AddForce(Vector3.up * jumpForce2, ForceMode.Impulse);
-                    Invoke("reduceJump", 0.1f);
+                    jumpsRemaining--;
                     Debug.Log(isGrounded);
                 }
                 
@@ -147,7 +152,7 @@ public class CharacterMovement : MonoBehaviour
             
 
             // Set the running parameter in the animator controller based on whether the character is running or not
-            if (Input.GetKeyDown(KeyCode.LeftShift) && playerStamina > 0.0f)
+            if (Input.GetKeyDown(KeyCode.LeftShift) && playerStamina > 0.0f && isGrounded)
             {
                 speed = 8.0f;
                 isRunning = true;
@@ -323,8 +328,5 @@ public class CharacterMovement : MonoBehaviour
 
 
     }
-    private void reduceJump()
-    {
-        jumpsRemaining--;
-    }
+  
 }

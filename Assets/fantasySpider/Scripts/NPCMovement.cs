@@ -72,7 +72,7 @@ public class NPCMovement : MonoBehaviour
     {
         if (electrified)
         {
-            attackDistance = 8f;
+            attackDistance = 10f;
             followDistance = 25f;
         }
         else
