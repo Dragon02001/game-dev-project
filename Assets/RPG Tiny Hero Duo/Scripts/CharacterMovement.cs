@@ -40,7 +40,6 @@ public class CharacterMovement : MonoBehaviour
     private bool isGrounded = true; // Initialize to true if the character starts on the ground
     public float jumpForce1 = 200f; // Adjust the value as needed
     public float jumpForce2 = 300f; // Adjust the value as needed
-    public float jumpForce3 = 500f; // Adjust the value as needed
     public float groundCheckDistance = 0.01f;
     public LayerMask groundLayer;
     public LineRenderer raycastDebugLine;
@@ -121,11 +120,6 @@ public class CharacterMovement : MonoBehaviour
                     isGrounded = false;
                     playerStamina -= 0.1f;
                     rb.AddForce(Vector3.up * jumpForce1, ForceMode.Impulse);
-                    // Get the forward direction of the player object
-                    Vector3 playerForward = transform.forward;
-
-                    // Apply the jump force in the forward direction
-                    rb.AddForce(playerForward * jumpForce3, ForceMode.Impulse);
                     jumpsRemaining--;
                     Debug.Log(isGrounded);
                 }
