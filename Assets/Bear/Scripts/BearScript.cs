@@ -78,7 +78,7 @@ public class BearScript : MonoBehaviour
                 {
                     // Start attacking with delay
                     CharacterMovement characterMovement = player.GetComponent<CharacterMovement>();
-                    PlayerHealth = characterMovement.playerHealth;
+                    PlayerHealth = characterMovement.Health;
                     // Start attacking with delay
                     if (PlayerHealth > 0)
                     {
