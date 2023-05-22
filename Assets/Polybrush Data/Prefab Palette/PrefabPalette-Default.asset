@@ -15,7 +15,23 @@ MonoBehaviour:
   prefabs:
   - gameObject: {fileID: 1000012006197310, guid: 465c505844950da499dcf096a6da4409, type: 3}
     settings:
-      m_Strength: 39.7
+      m_Strength: 8.3
+      m_RotationRangeMin: {x: 0, y: 0, z: 0}
+      m_RotationRangeMax: {x: 0, y: 0, z: 0}
+      m_ScaleRangeMin: {x: 1, y: 1, z: 1}
+      m_ScaleRangeMax: {x: 1, y: 1, z: 1}
+      m_UniformScale: {x: 1, y: 2.2765958}
+      m_UniformBool: 1
+      m_XRotationBool: 0
+      m_YRotationBool: 0
+      m_ZRotationBool: 0
+      m_XScaleBool: 0
+      m_YScaleBool: 0
+      m_ZScaleBool: 0
+    name: crystal_17_2
+  - gameObject: {fileID: 919132149155446097, guid: 234d1a4246d987042965cbe22a34f848, type: 3}
+    settings:
+      m_Strength: 50
       m_RotationRangeMin: {x: 0, y: 0, z: 0}
       m_RotationRangeMax: {x: 0, y: 0, z: 0}
       m_ScaleRangeMin: {x: 1, y: 1, z: 1}
@@ -28,4 +44,4 @@ MonoBehaviour:
       m_XScaleBool: 0
       m_YScaleBool: 0
       m_ZScaleBool: 0
-    name: crystal_17_2
+    name: uploads_files_3508942_Spider+Web
