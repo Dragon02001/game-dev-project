@@ -22,7 +22,7 @@ public class Health : MonoBehaviour
         if (character != null)
         {
             CharacterMovement characterMovement = character.GetComponent<CharacterMovement>();
-            currentHealth = characterMovement.playerHealth;
+            currentHealth = characterMovement.Health;
 
             Healthbar.fillAmount = currentHealth;
 

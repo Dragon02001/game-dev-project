@@ -9,8 +9,8 @@ public class CharacterMovement : MonoBehaviour
     public float speed = 5.0f;
     public float rotationSpeed = 100.0f;
     public Transform cameraTransform; // Reference to the camera's transform
-
-    public AudioClip attackSound;
+    
+    
     public AudioClip deathSound;
     public AudioClip jumpSound;
     public AudioClip victorySound;
@@ -18,97 +18,135 @@ public class CharacterMovement : MonoBehaviour
     public AudioClip dizzySound;
     private AudioSource audioSource;
 
-    private Animator animator;
+    public Animator animator;
     private bool isWalking = false;
-    private bool isAttacking = false;
-    private bool isDefending = false;
+    public bool isAttacking = false;
+    public bool isDefending = false;
     private bool isJumping = false;
     private bool isRunning = false;
 
-    private float lastAttackTime = 0.0f;
 
-    public float playerHealth = 1.0f;
+    public float MaxHealth = 1.0f;
+    public float Health = 1.0f;
 
     private bool isDead = false;
 
     public float playerStamina = 1.0f;
 
     public float maxStamina = 1.0f;
-
+    public int maxJumps = 2;
+    private int jumpsRemaining;
+    private Rigidbody rb;
+    private bool isGrounded = true; // Initialize to true if the character starts on the ground
+    public float jumpForce1 = 200f; // Adjust the value as needed
+    public float jumpForce2 = 300f; // Adjust the value as needed
+    public float groundCheckDistance = 0.01f;
+    public LayerMask groundLayer;
+    public LineRenderer raycastDebugLine;
+    public Vector3 raycastOffset = new Vector3(0f, 1f, 0f);
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
+        jumpsRemaining = maxJumps;
     }
 
     void Update()
     {
         if (!isDead)
         {
+            isGrounded = Physics.Raycast(transform.position + raycastOffset, Vector3.down, out RaycastHit hit, groundCheckDistance, groundLayer);
+            Debug.Log(isGrounded);
+
+            // Visualize the raycast using the LineRenderer
+            raycastDebugLine.SetPosition(0, transform.position + raycastOffset);
+            raycastDebugLine.SetPosition(1, transform.position + raycastOffset + Vector3.down * groundCheckDistance);
+
+
             UpdateStamina();
 
             // Move the character forward or backward when the user presses the W or S key
-            float moveHorizontal = Input.GetAxis("Horizontal");
-            float moveVertical = Input.GetAxis("Vertical");
+            if (isGrounded)
+            {
+                jumpsRemaining = maxJumps;
+            }
+                float moveHorizontal = Input.GetAxis("Horizontal");
+                float moveVertical = Input.GetAxis("Vertical");
 
-            if (moveVertical != 0 || moveHorizontal != 0)
-            {
-                Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-                movement = Quaternion.Euler(0.0f, transform.rotation.eulerAngles.y, 0.0f) * movement;
-                transform.Translate(movement * speed * Time.deltaTime, Space.World);
-                isWalking = true;
-            }
-            else
-            {
-                isWalking = false;
-            }
+                if (moveVertical != 0 || moveHorizontal != 0)
+                {
+                    Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+                    movement = Quaternion.Euler(0.0f, transform.rotation.eulerAngles.y, 0.0f) * movement;
+                    transform.Translate(movement * speed * Time.deltaTime, Space.World);
+                    if (isGrounded)
+                    {
+                        isWalking = true;
+                    }
+                }
+                else
+                {
+                    isWalking = false;
+                }
 
-            // Set the walking parameter in the animator controller based on whether the character is walking or not
-            animator.SetBool("isWalking", isWalking);
-
-            // Set the attacking parameter in the animator controller based on whether the character is attacking or not
-            if (Input.GetKeyDown(KeyCode.E) && Time.time - lastAttackTime > 1.0f && playerStamina > 0.0f) // 1 second cooldown
-            {
-                audioSource.PlayOneShot(attackSound);
-                isAttacking = true;
-                lastAttackTime = Time.time;
-                playerStamina -= 0.1f;
-            }
-            if (Input.GetKeyUp(KeyCode.E))
-            {
-                isAttacking = false;
-                audioSource.Stop();
-            }
-            animator.SetBool("isAttacking", isAttacking);
+                // Set the walking parameter in the animator controller based on whether the character is walking or not
+                animator.SetBool("isWalking", isWalking);
+            
 
             // Set the defending parameter in the animator controller based on whether the character is defending or not
-            if (Input.GetKeyDown(KeyCode.Q) && playerStamina > 0.0f)
+            if (Input.GetMouseButtonDown(1)) // 1 represents the right mouse button
             {
                 isDefending = true;
-                playerStamina -= 0.1f;
             }
-            if (Input.GetKeyUp(KeyCode.Q))
+
+            if (Input.GetMouseButtonUp(1)) // 1 represents the right mouse button
             {
                 isDefending = false;
             }
             animator.SetBool("isDefending", isDefending);
 
             // Set the jumping parameter in the animator controller based on whether the character is jumping or not
-            if (Input.GetKeyDown(KeyCode.Space) && playerStamina > 0.0f)
+            if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || jumpsRemaining > 0) && playerStamina > 0.0f)
             {
-                audioSource.PlayOneShot(jumpSound);
-                isJumping = true;
-                playerStamina -= 0.1f;
+                isWalking = false;
+                isRunning = false;
+                animator.SetBool("isWalking", isWalking);
+            Debug.Log("jumps" + jumpsRemaining);
+                if (jumpsRemaining == 2)
+                {
+                    animator.SetTrigger("isJumping1");
+                    audioSource.PlayOneShot(jumpSound);
+                    isJumping = true;
+                    isGrounded = false;
+                    playerStamina -= 0.1f;
+                    rb.AddForce(Vector3.up * jumpForce1, ForceMode.Impulse);
+                    jumpsRemaining--;
+                    Debug.Log(isGrounded);
+                }
+                else
+                {
+                    animator.SetTrigger("isJumping2");
+                    audioSource.PlayOneShot(jumpSound);
+                    isJumping = true;
+                    isGrounded = false;
+                    playerStamina -= 0.1f;
+                    rb.AddForce(Vector3.up * jumpForce2, ForceMode.Impulse);
+                    jumpsRemaining--;
+                    Debug.Log(isGrounded);
+                }
+                
+              
+                
             }
             if (Input.GetKeyUp(KeyCode.Space))
             {
                 isJumping = false;
                 audioSource.Stop();
             }
-            animator.SetBool("isJumping", isJumping);
+            
 
             // Set the running parameter in the animator controller based on whether the character is running or not
-            if (Input.GetKeyDown(KeyCode.LeftShift) && playerStamina > 0.0f)
+            if (Input.GetKeyDown(KeyCode.LeftShift) && playerStamina > 0.0f && isGrounded)
             {
                 speed = 8.0f;
                 isRunning = true;
@@ -139,7 +177,7 @@ public class CharacterMovement : MonoBehaviour
             {
                 animator.SetBool("isVictorious", true); //Play victory animation
                 audioSource.PlayOneShot(victorySound);
-                playerHealth = 1f;
+                Health = 1f;
             }
             else if (Input.GetKeyUp(KeyCode.O))
             {
@@ -152,10 +190,10 @@ public class CharacterMovement : MonoBehaviour
                 if (isDefending)
                 {
                     animator.SetBool("isHitDefending", true);
-                    playerHealth -= 0.05f; //Reduce the damage when defending
+                    Health -= 0.05f; //Reduce the damage when defending
 
                     //Check if the player's health is below zero
-                    if (playerHealth <= 0)
+                    if (Health <= 0)
                     {
                         isDead = true;
                         animator.SetBool("isDead", true); //Play dead animation
@@ -165,7 +203,7 @@ public class CharacterMovement : MonoBehaviour
                 else
                 {
                     animator.SetBool("isHit", true);
-                    playerHealth -= 0.1f;
+                    Health -= 0.1f;
                 }
             }
             else if (Input.GetKeyUp(KeyCode.I))
@@ -175,16 +213,16 @@ public class CharacterMovement : MonoBehaviour
             }
 
             // Update the player's health
-            if (playerHealth <= 0)
+            if (Health <= 0)
             {
                 isDead = true;
                 animator.SetBool("isDead", true); //Play dead animation
                 audioSource.PlayOneShot(deathSound);
             }
-
+            
             void UpdateStamina()
             {
-                if (isRunning || isAttacking || isDefending || isJumping)
+                if (isRunning || isAttacking  || isJumping)
                 {
                     playerStamina -= 0.1f * Time.deltaTime;
                     if (playerStamina < 0.0f)
@@ -197,7 +235,7 @@ public class CharacterMovement : MonoBehaviour
                         isDefending = false;
 
                         speed = 5.0f;
-                        audioSource.PlayOneShot(dizzySound);
+                       // audioSource.PlayOneShot(dizzySound);
                     }
                 }
                 else
@@ -214,7 +252,7 @@ public class CharacterMovement : MonoBehaviour
 
             void UpdateStamina2()
             {
-                if(playerStamina <= 0.0f)
+                if (playerStamina <= 0.0f)
                 {
                     // Play the animation
                     animator.SetBool("isDizzy", true);
@@ -241,6 +279,48 @@ public class CharacterMovement : MonoBehaviour
                 playerStamina = maxStamina;
                 speed = isRunning ? 8.0f : 5.0f;
             }
+
         }
     }
+    public void TakeDamage(float amount)
+    {
+        if (isDefending)
+        {
+            amount = amount / 2;
+        }
+        Health -= amount;
+        // Debug.Log(Health);
+
+        Vector3 offset = new Vector3(0.0f, 2.5f, 1.0f); // Vertical offset from the character
+        Vector3 position = transform.position + offset;
+        amount = amount * 100;
+        if (amount > 50)
+        {
+            damagepopup.current.CreatePopUp(position, amount.ToString(), Color.red);
+        }
+        else
+        {
+            damagepopup.current.CreatePopUp(position, amount.ToString(), Color.yellow);
+        }
+
+        if (Health <= 0)
+        {
+            Debug.Log("Dead");
+            // Die();
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+
+        if (other.tag == "Heal")
+        {
+            Debug.Log("Im healed");
+            Health = MaxHealth;
+        }
+
+
+
+
+    }
+  
 }
