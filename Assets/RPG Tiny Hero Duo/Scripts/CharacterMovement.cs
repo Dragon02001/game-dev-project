@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class CharacterMovement : MonoBehaviour
 {
-    public float speed = 5.0f;
+    public float speed = 8f;
     public float rotationSpeed = 100.0f;
     public Transform cameraTransform; // Reference to the camera's transform
     
@@ -148,14 +148,14 @@ public class CharacterMovement : MonoBehaviour
             // Set the running parameter in the animator controller based on whether the character is running or not
             if (Input.GetKeyDown(KeyCode.LeftShift) && playerStamina > 0.0f && isGrounded)
             {
-                speed = 8.0f;
+                speed = 12.0f;
                 isRunning = true;
                 audioSource.PlayOneShot(runningSound);
                 playerStamina -= 0.05f;
             }
             else if (Input.GetKeyUp(KeyCode.LeftShift))
             {
-                speed = 5.0f;
+                speed = 8.0f;
                 isRunning = false;
                 audioSource.Stop();
             }
@@ -234,7 +234,7 @@ public class CharacterMovement : MonoBehaviour
                         isWalking = false;
                         isDefending = false;
 
-                        speed = 5.0f;
+                        speed = 8.0f;
                        // audioSource.PlayOneShot(dizzySound);
                     }
                 }
@@ -266,7 +266,7 @@ public class CharacterMovement : MonoBehaviour
                 else
                 {
                     animator.SetBool("isDizzy", false);
-                    speed = isRunning ? 8.0f : 5.0f;
+                    speed = isRunning ? 12.0f : 8.0f;
                 }
 
                 playerStamina = Mathf.Clamp(playerStamina, 0.0f, maxStamina);
@@ -277,7 +277,7 @@ public class CharacterMovement : MonoBehaviour
                 yield return new WaitForSeconds(delay);
 
                 playerStamina = maxStamina;
-                speed = isRunning ? 8.0f : 5.0f;
+                speed = isRunning ? 12.0f : 8.0f;
             }
 
         }

@@ -120,9 +120,10 @@ public class AOE : MonoBehaviour
         {
             float moveDuration = 2.0f; // Adjust this value to set the duration of movement
             float moveSpeed = 10.0f; // Adjust this value to set the speed of movement
+            float upwardForce = 3.0f; // Adjust this value to set the upward force
 
-            rb.AddForce(newObject.transform.forward * moveSpeed, ForceMode.VelocityChange);
-
+            Vector3 movement = newObject.transform.forward * moveSpeed + Vector3.up * upwardForce;
+            rb.AddForce(movement, ForceMode.VelocityChange);
             // Stop the movement after the specified duration
             //StartCoroutine(StopMovementAfterDelay(newObject, moveDuration));
         }
