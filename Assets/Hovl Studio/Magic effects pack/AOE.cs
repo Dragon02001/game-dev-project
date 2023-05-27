@@ -29,7 +29,7 @@ public class AOE : MonoBehaviour
     public CharacterMovement cm;
     void start()
     {
-
+        cm = GetComponent<CharacterMovement>();
     }
     void Update()
     {
@@ -38,7 +38,7 @@ public class AOE : MonoBehaviour
             if (Time.time - lastInstantiationUltTime >= UltcooldownTime)
             {
                 lastInstantiationUltTime = Time.time; // Record the time the object was instantiated.
-                
+                cm.animator.SetTrigger("ult");
                 if (UltAbility == 1)
                 {
                     position();
@@ -68,7 +68,7 @@ public class AOE : MonoBehaviour
             {
 
                 lastInstantiationSideTime = Time.time; // Record the time the object was instantiated.
-                cm.animator.SetTrigger("combo1");
+                cm.animator.SetTrigger("spell");
                 if (SideAbility == 1)
                 {
                     position();
@@ -130,7 +130,7 @@ public class AOE : MonoBehaviour
     }
     void position()
     {
-        offset = new Vector3(0.0f, 1f, 0.0f);
+        offset = new Vector3(0.0f, 2f, 0.0f);
         spawnPosition = transform.position + offset;
     }
 

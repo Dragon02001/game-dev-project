@@ -19,7 +19,7 @@ public class CharacterMovement : MonoBehaviour
     private AudioSource audioSource;
 
     public Animator animator;
-    private bool isWalking = false;
+    //private bool isWalking = false;
     public bool isAttacking = false;
     public bool isDefending = false;
     private bool isJumping = false;
@@ -57,7 +57,7 @@ public class CharacterMovement : MonoBehaviour
         if (!isDead)
         {
             isGrounded = Physics.Raycast(transform.position + raycastOffset, Vector3.down, out RaycastHit hit, groundCheckDistance, groundLayer);
-            Debug.Log(isGrounded);
+            //Debug.Log(isGrounded);
 
             // Visualize the raycast using the LineRenderer
             raycastDebugLine.SetPosition(0, transform.position + raycastOffset);
@@ -81,16 +81,16 @@ public class CharacterMovement : MonoBehaviour
                     transform.Translate(movement * speed * Time.deltaTime, Space.World);
                     if (isGrounded)
                     {
-                        isWalking = true;
+                      //  isWalking = true;
                     }
                 }
                 else
                 {
-                    isWalking = false;
+                   // isWalking = false;
                 }
 
                 // Set the walking parameter in the animator controller based on whether the character is walking or not
-                animator.SetBool("isWalking", isWalking);
+                //animator.SetBool("isWalking", isWalking);
             
 
             // Set the defending parameter in the animator controller based on whether the character is defending or not
@@ -108,10 +108,10 @@ public class CharacterMovement : MonoBehaviour
             // Set the jumping parameter in the animator controller based on whether the character is jumping or not
             if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || jumpsRemaining > 0) && playerStamina > 0.0f)
             {
-                isWalking = false;
+               // isWalking = false;
                 isRunning = false;
-                animator.SetBool("isWalking", isWalking);
-            Debug.Log("jumps" + jumpsRemaining);
+               // animator.SetBool("isWalking", isWalking);
+            //Debug.Log("jumps" + jumpsRemaining);
                 if (jumpsRemaining == 2)
                 {
                     animator.SetTrigger("isJumping1");
@@ -121,7 +121,7 @@ public class CharacterMovement : MonoBehaviour
                     playerStamina -= 0.1f;
                     rb.AddForce(Vector3.up * jumpForce1, ForceMode.Impulse);
                     jumpsRemaining--;
-                    Debug.Log(isGrounded);
+                   // Debug.Log(isGrounded);
                 }
                 else
                 {
@@ -132,7 +132,7 @@ public class CharacterMovement : MonoBehaviour
                     playerStamina -= 0.1f;
                     rb.AddForce(Vector3.up * jumpForce2, ForceMode.Impulse);
                     jumpsRemaining--;
-                    Debug.Log(isGrounded);
+                   // Debug.Log(isGrounded);
                 }
                 
               
@@ -145,21 +145,6 @@ public class CharacterMovement : MonoBehaviour
             }
             
 
-            // Set the running parameter in the animator controller based on whether the character is running or not
-            if (Input.GetKeyDown(KeyCode.LeftShift) && playerStamina > 0.0f && isGrounded)
-            {
-                speed = 12.0f;
-                isRunning = true;
-                audioSource.PlayOneShot(runningSound);
-                playerStamina -= 0.05f;
-            }
-            else if (Input.GetKeyUp(KeyCode.LeftShift))
-            {
-                speed = 8.0f;
-                isRunning = false;
-                audioSource.Stop();
-            }
-            animator.SetBool("isRunning", isRunning);
 
             // Rotate the character based on mouse movement
             float mouseX = Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
@@ -222,7 +207,7 @@ public class CharacterMovement : MonoBehaviour
             
             void UpdateStamina()
             {
-                if (isRunning || isAttacking  || isJumping)
+                if ( isAttacking  || isJumping)
                 {
                     playerStamina -= 0.1f * Time.deltaTime;
                     if (playerStamina < 0.0f)
@@ -231,7 +216,7 @@ public class CharacterMovement : MonoBehaviour
                         isRunning = false;
                         isJumping = false;
                         isAttacking = false;
-                        isWalking = false;
+                       // isWalking = false;
                         isDefending = false;
 
                         speed = 8.0f;
@@ -306,7 +291,9 @@ public class CharacterMovement : MonoBehaviour
         if (Health <= 0)
         {
             Debug.Log("Dead");
-            // Die();
+            isDead = true;
+            animator.SetBool("isDead", true); //Play dead animation
+            audioSource.PlayOneShot(deathSound);
         }
     }
     private void OnTriggerEnter(Collider other)

@@ -86,8 +86,8 @@ public class Sword : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-            cm.isAttacking = false;
-           // StartCoroutine(WaitAndSetAttacking(0.5f)); // Wait for 0.5 seconds before setting isAttacking to false
+            //cm.isAttacking = false;
+            StartCoroutine(WaitAndSetAttacking(0.4f)); // Wait for 0.5 seconds before setting isAttacking to false
             audioSource.Stop();
         }
 

@@ -77,7 +77,7 @@ public class NPCMovement : MonoBehaviour
         }
         else
         {
-            attackDistance = 5f;
+            attackDistance = 8f;
             followDistance = 15f;
         }
         if (Alive)
@@ -195,7 +195,7 @@ public class NPCMovement : MonoBehaviour
                             {
                                 if (!electrified)
                                 {
-                                    //animator.SetTrigger("Taunt");
+                                    animator.SetTrigger("Taunt");
                                 }
                             }
                         }
