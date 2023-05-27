@@ -7,7 +7,7 @@ public class NPCMovement : MonoBehaviour
 {
 
   
-    [SerializeField] private float followDistance = 15f;
+    [SerializeField] private float followDistance = 20f;
     [SerializeField] private float attackDistance = 5f;
     [SerializeField] private float attackInterval = 2.5f;
     [SerializeField] private float maxHealth = 1f;
@@ -73,12 +73,12 @@ public class NPCMovement : MonoBehaviour
         if (electrified)
         {
             attackDistance = 10f;
-            followDistance = 25f;
+            followDistance = 30f;
         }
         else
         {
             attackDistance = 8f;
-            followDistance = 15f;
+            followDistance = 20f;
         }
         if (Alive)
         {
