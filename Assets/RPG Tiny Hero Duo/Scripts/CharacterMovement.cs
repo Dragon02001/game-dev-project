@@ -54,6 +54,11 @@ public class CharacterMovement : MonoBehaviour
 
     void Update()
     {
+        if (cameraTransform != null)
+        {
+            float mouseY = Input.GetAxis("Mouse Y") * rotationSpeed * Time.deltaTime;
+            cameraTransform.Rotate(Vector3.left, mouseY);
+        }
         if (!isDead)
         {
             isGrounded = Physics.Raycast(transform.position + raycastOffset, Vector3.down, out RaycastHit hit, groundCheckDistance, groundLayer);
@@ -164,6 +169,7 @@ public class CharacterMovement : MonoBehaviour
             // Rotate the character based on mouse movement
             float mouseX = Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
             transform.Rotate(Vector3.up, mouseX);
+
 
             // Rotate the camera based on the character's rotation
             if (cameraTransform != null)
