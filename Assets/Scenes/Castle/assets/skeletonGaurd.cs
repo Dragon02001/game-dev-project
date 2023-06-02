@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class NPCMovement : MonoBehaviour
+public class skeletonGaurd : MonoBehaviour
 {
 
-  
+
     [SerializeField] private float followDistance = 20f;
     [SerializeField] private float attackDistance = 5f;
     [SerializeField] private float attackInterval = 2.5f;
@@ -37,14 +37,14 @@ public class NPCMovement : MonoBehaviour
     private float timeSinceLastPause = 0f;
     private float directionChangeDelay = 2f;
     private float pauseDuration = 1f;
-    public float Health;
+    private float Health;
     public float PlayerHealth;
     public int Fire;
     public int Ice;
     private bool electrified = false; // New bool variable
     private int countOfNpc;
     private Vector3 nextDirection;
-  
+
 
     private void Start()
     {
@@ -64,31 +64,31 @@ public class NPCMovement : MonoBehaviour
 
         Health = maxHealth;
 
-      
 
-}
+
+    }
 
     private void Update()
     {
 
         if (Alive)
         {
-          if (!Freeze)
-           {
-            if (isAttacking)
+            if (!Freeze)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") || !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack2") || !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack3") || !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack4"))
+                if (isAttacking)
                 {
-                    isAttacking = false;
-                    timeSinceLastAttack = 0f;
-                    agent.isStopped = false;
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") || !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack2") || !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack3") || !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack4"))
+                    {
+                        isAttacking = false;
+                        timeSinceLastAttack = 0f;
+                        agent.isStopped = false;
+                    }
+                    return;
                 }
-                return;
-            }
-            else
-            {
-                ResumeMovement();
-            }
+                else
+                {
+                    ResumeMovement();
+                }
                 if (electrified)
                 {
                     GameObject[] npcObjects = GameObject.FindGameObjectsWithTag("Enemy");
@@ -120,19 +120,19 @@ public class NPCMovement : MonoBehaviour
                             player = closestNPC;
                         }
                     }
-                    
+
 
                 }
                 else
                 {
                     player = GameObject.FindGameObjectWithTag("Player");
                 }
-                if (Vector3.Distance(transform.position, player.transform.position) <= followDistance && !isAttacking)
+                if (Vector3.Distance(transform.position, player.transform.position) <= followDistance && !isAttacking && Health > 0)
                 {
                     isMoving = true;
                     animator.SetBool("isMoving", isMoving);
                     audioSource1.clip = runSound;
-                   // audioSource1.loop = true;
+                    // audioSource1.loop = true;
                     if (!audioSource1.isPlaying && !isAttacking)
                     {
                         audioSource1.Play();
@@ -165,9 +165,9 @@ public class NPCMovement : MonoBehaviour
                     }
                     // Check if the player is within attack range
                     //Debug.Log(Vector3.Distance(transform.position, player.transform.position));
-                    if (Vector3.Distance(transform.position, player.transform.position) <= attackDistance)
+                    if (Vector3.Distance(transform.position, player.transform.position) <= attackDistance && Health > 0)
                     {
-                       // Debug.Log("following");
+                        // Debug.Log("following");
                         if (audioSource1.isPlaying)
                         {
                             audioSource1.Stop();
@@ -196,71 +196,71 @@ public class NPCMovement : MonoBehaviour
                         //Debug.Log(PlayerHealth);
                         if (PlayerHealth > 0)
                         {
-                            
+
                             // Set the destination to the player's position
                             agent.SetDestination(player.transform.position);
                         }
                     }
                 }
-            else
-            {
-                // Stop playing the audio when the spider is not following the character
-                if (audioSource1.isPlaying)
+                else
                 {
-                    audioSource1.Stop();
+                    // Stop playing the audio when the npc is not following the character
+                    if (audioSource1.isPlaying)
+                    {
+                        audioSource1.Stop();
+                    }
+                    isMoving = false;
+                    // Roam around randomly
+                    //if (!isPaused && !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") && Health > 0)
+                    //{
+                    //    timeSinceLastDirectionChange += Time.deltaTime;
+                    //    if (timeSinceLastDirectionChange >= directionChangeDelay)
+                    //    {
+                    //        // Pause before changing direction
+                    //        isPaused = true;
+                    //        timeSinceLastPause = 0f;
+                    //        timeSinceLastDirectionChange = 0f;
+                    //        isMoving = false;
+                    //        animator.SetBool("isMoving", isMoving);
+                    //    }
+                    //    else
+                    //    {
+                    //        isMoving = true;
+                    //        animator.SetBool("isMoving", isMoving);
+                    //    }
+
+                    //    // Move the NPC
+                    //    transform.Translate(nextDirection * speed * Time.deltaTime, Space.World);
+
+                    //    if (nextDirection != Vector3.zero)
+                    //    {
+                    //        // Rotate the NPC towards the next direction
+                    //        Quaternion targetRotation = Quaternion.LookRotation(nextDirection, Vector3.up);
+                    //        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 360f * Time.deltaTime);
+                    //    }
+                    //}
+                    //else if (Health > 0)
+                    //{
+                    //    // Pause before changing direction
+                    //    timeSinceLastPause += Time.deltaTime;
+
+                    //    if (timeSinceLastPause >= pauseDuration)
+                    //    {
+                    //        // Change direction after pause
+                    //        isPaused = false;
+                    //        timeSinceLastPause = 0f;
+
+                    //        // Set the next direction randomly
+                    //        float angle = Random.Range(0f, 360f);
+                    //        nextDirection = Quaternion.AngleAxis(angle, Vector3.up) * Vector3.forward;
+                    //        isMoving = true;
+                    //        animator.SetBool("isMoving", isMoving);
+                    //    }
+                    //}
                 }
 
-                // Roam around randomly
-                if (!isPaused && !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") && Health > 0)
-                {
-                    timeSinceLastDirectionChange += Time.deltaTime;
-                    if (timeSinceLastDirectionChange >= directionChangeDelay)
-                    {
-                        // Pause before changing direction
-                        isPaused = true;
-                        timeSinceLastPause = 0f;
-                        timeSinceLastDirectionChange = 0f;
-                        isMoving = false;
-                        animator.SetBool("isMoving", isMoving);
-                    }
-                    else
-                    {
-                        isMoving = true;
-                        animator.SetBool("isMoving", isMoving);
-                    }
-
-                    // Move the NPC
-                    transform.Translate(nextDirection * speed * Time.deltaTime, Space.World);
-
-                    if (nextDirection != Vector3.zero)
-                    {
-                        // Rotate the NPC towards the next direction
-                        Quaternion targetRotation = Quaternion.LookRotation(nextDirection, Vector3.up);
-                        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 360f * Time.deltaTime);
-                    }
-                }
-                else if (Health > 0)
-                {
-                    // Pause before changing direction
-                    timeSinceLastPause += Time.deltaTime;
-
-                    if (timeSinceLastPause >= pauseDuration)
-                    {
-                        // Change direction after pause
-                        isPaused = false;
-                        timeSinceLastPause = 0f;
-
-                        // Set the next direction randomly
-                        float angle = Random.Range(0f, 360f);
-                        nextDirection = Quaternion.AngleAxis(angle, Vector3.up) * Vector3.forward;
-                        isMoving = true;
-                        animator.SetBool("isMoving", isMoving);
-                    }
-                }
-            }
-
-            // Update the time since last attack
-            timeSinceLastAttack += Time.deltaTime;
+                // Update the time since last attack
+                timeSinceLastAttack += Time.deltaTime;
             }
         }
     }
@@ -294,6 +294,7 @@ public class NPCMovement : MonoBehaviour
                 Alive = false;
                 isAggressive = false;
                 isMoving = false;
+                isAttacking= false;
                 animator.SetBool("isMoving", isMoving);
                 animator.SetTrigger("Die");
                 agent.isStopped = true;
@@ -301,6 +302,7 @@ public class NPCMovement : MonoBehaviour
                 // audioSource2.clip = deathSound;
                 // audioSource2.Play();
                 Destroy(gameObject, 5f);
+
             }
         }
         Debug.Log(Health);
@@ -308,7 +310,7 @@ public class NPCMovement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        
+
         if (other.tag == "FreezeCircle" && !ultTrigger)
         {
             Ice = 2;
@@ -316,7 +318,7 @@ public class NPCMovement : MonoBehaviour
             Debug.Log("its cold");
             FreezeNpc();
             TakeDamage(0.5f);
-            
+
         }
         if (other.tag == "IceSlash" && !sideTrigger)
         {
@@ -325,9 +327,9 @@ public class NPCMovement : MonoBehaviour
             Debug.Log("its cold");
             FreezeNpc();
             TakeDamage(0.3f);
-            
+
         }
- 
+
         if (other.tag == "FireSlash" && !sideTrigger)
         {
             Fire = 1;
@@ -347,7 +349,7 @@ public class NPCMovement : MonoBehaviour
         }
         if (other.tag == "ElectricSlash" && !sideTrigger)
         {
-            
+
             sideTrigger = true;
             Debug.Log("im electrecuted");
             shock();
@@ -394,13 +396,13 @@ public class NPCMovement : MonoBehaviour
     }
     void notElectrified()
     {
-        electrified= false;
+        electrified = false;
     }
     //Fire Methods
     void NotOnFire()
     {
         onFire = false;
-        
+
     }
     void onFireNPC()
     {
@@ -455,7 +457,7 @@ public class NPCMovement : MonoBehaviour
         {
             Invoke("restoreUlt", 12f); // Restore agent speed after 4 seconds
         }
-            
+
         Invoke("UnFreeze", 4f); // unfreeze npc
     }
     //*****************************
@@ -568,7 +570,7 @@ public class NPCMovement : MonoBehaviour
 
                     audioSource2.clip = attackSound;
                     audioSource2.Play();
-                    float dmg = Random.Range(0.1f, 0.2f);
+                    float dmg = Random.Range(0.3f, 0.5f);
                     float roundedDamage = Mathf.Round(dmg * 100f) / 100f; // round to two decimal places
                     npcmovement.TakeDamage(roundedDamage);
                 }
@@ -594,7 +596,7 @@ public class NPCMovement : MonoBehaviour
                         audioSource2.Play();
                         characterMovement.animator.SetTrigger("isHitDefending");
                     }
-                    float dmg = Random.Range(0.1f, 0.2f);
+                    float dmg = Random.Range(0.3f, 0.5f);
                     float roundedDamage = Mathf.Round(dmg * 100f) / 100f; // round to two decimal places
                     characterMovement.TakeDamage(roundedDamage);
                 }

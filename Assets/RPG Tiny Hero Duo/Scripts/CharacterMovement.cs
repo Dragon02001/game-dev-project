@@ -213,7 +213,7 @@ public class CharacterMovement : MonoBehaviour
             
             void UpdateStamina()
             {
-                if ( isAttacking  || isJumping)
+                if ( isJumping)
                 {
                     playerStamina -= 0.1f * Time.deltaTime;
                     if (playerStamina < 0.0f)
