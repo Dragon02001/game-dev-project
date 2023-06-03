@@ -44,12 +44,14 @@ public class CharacterMovement : MonoBehaviour
     public LayerMask groundLayer;
     public LineRenderer raycastDebugLine;
     public Vector3 raycastOffset = new Vector3(0f, 1f, 0f);
+    public LevelManager levelManager;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         jumpsRemaining = maxJumps;
+
     }
 
     void Update()
@@ -65,8 +67,8 @@ public class CharacterMovement : MonoBehaviour
             //Debug.Log(isGrounded);
 
             // Visualize the raycast using the LineRenderer
-            raycastDebugLine.SetPosition(0, transform.position + raycastOffset);
-            raycastDebugLine.SetPosition(1, transform.position + raycastOffset + Vector3.down * groundCheckDistance);
+            //raycastDebugLine.SetPosition(0, transform.position + raycastOffset);
+            //raycastDebugLine.SetPosition(1, transform.position + raycastOffset + Vector3.down * groundCheckDistance);
 
 
             UpdateStamina();
@@ -76,27 +78,17 @@ public class CharacterMovement : MonoBehaviour
             {
                 jumpsRemaining = maxJumps;
             }
-                float moveHorizontal = Input.GetAxis("Horizontal");
-                float moveVertical = Input.GetAxis("Vertical");
+            float moveHorizontal = Input.GetAxis("Horizontal");
+            float moveVertical = Input.GetAxis("Vertical");
 
-                if (moveVertical != 0 || moveHorizontal != 0)
-                {
-                    Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-                    movement = Quaternion.Euler(0.0f, transform.rotation.eulerAngles.y, 0.0f) * movement;
-                    transform.Translate(movement * speed * Time.deltaTime, Space.World);
-                    if (isGrounded)
-                    {
-                      //  isWalking = true;
-                    }
-                }
-                else
-                {
-                   // isWalking = false;
-                }
+            if (moveVertical != 0 || moveHorizontal != 0)
+            {
+                Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+                movement = Quaternion.Euler(0.0f, transform.rotation.eulerAngles.y, 0.0f) * movement;
+                transform.Translate(movement * speed * Time.deltaTime, Space.World);
+            }
 
-                // Set the walking parameter in the animator controller based on whether the character is walking or not
-                //animator.SetBool("isWalking", isWalking);
-            
+
 
             // Set the defending parameter in the animator controller based on whether the character is defending or not
             if (Input.GetMouseButtonDown(1)) // 1 represents the right mouse button
@@ -151,17 +143,7 @@ public class CharacterMovement : MonoBehaviour
             
 
 
-            // Rotate the character based on mouse movement
-            float mouseX = Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
-            transform.Rotate(Vector3.up, mouseX);
 
-
-            // Rotate the camera based on the character's rotation
-            if (cameraTransform != null)
-            {
-                cameraTransform.rotation = Quaternion.Euler(cameraTransform.rotation.eulerAngles.x,
-                    cameraTransform.rotation.eulerAngles.y, cameraTransform.rotation.eulerAngles.z);
-            }
 
             //testing if won
             if (Input.GetKeyDown(KeyCode.O))
@@ -300,7 +282,13 @@ public class CharacterMovement : MonoBehaviour
             isDead = true;
             animator.SetBool("isDead", true); //Play dead animation
             audioSource.PlayOneShot(deathSound);
+            Invoke("RestartLevel", 2f);
         }
+
+    }
+    private void RestartLevel()
+    {
+        levelManager.RestartLevel();
     }
     private void OnTriggerEnter(Collider other)
     {

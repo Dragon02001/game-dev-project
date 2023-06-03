@@ -10,6 +10,7 @@ public class skeletonGaurd : MonoBehaviour
     [SerializeField] private float followDistance = 20f;
     [SerializeField] private float attackDistance = 5f;
     [SerializeField] private float attackInterval = 2.5f;
+    [SerializeField] private float DamageDone = 0.15f;
     [SerializeField] private float maxHealth = 1f;
     [SerializeField] private float speed = 5f;
     [SerializeField] private AudioClip runSound;
@@ -210,53 +211,7 @@ public class skeletonGaurd : MonoBehaviour
                         audioSource1.Stop();
                     }
                     isMoving = false;
-                    // Roam around randomly
-                    //if (!isPaused && !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") && Health > 0)
-                    //{
-                    //    timeSinceLastDirectionChange += Time.deltaTime;
-                    //    if (timeSinceLastDirectionChange >= directionChangeDelay)
-                    //    {
-                    //        // Pause before changing direction
-                    //        isPaused = true;
-                    //        timeSinceLastPause = 0f;
-                    //        timeSinceLastDirectionChange = 0f;
-                    //        isMoving = false;
-                    //        animator.SetBool("isMoving", isMoving);
-                    //    }
-                    //    else
-                    //    {
-                    //        isMoving = true;
-                    //        animator.SetBool("isMoving", isMoving);
-                    //    }
 
-                    //    // Move the NPC
-                    //    transform.Translate(nextDirection * speed * Time.deltaTime, Space.World);
-
-                    //    if (nextDirection != Vector3.zero)
-                    //    {
-                    //        // Rotate the NPC towards the next direction
-                    //        Quaternion targetRotation = Quaternion.LookRotation(nextDirection, Vector3.up);
-                    //        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 360f * Time.deltaTime);
-                    //    }
-                    //}
-                    //else if (Health > 0)
-                    //{
-                    //    // Pause before changing direction
-                    //    timeSinceLastPause += Time.deltaTime;
-
-                    //    if (timeSinceLastPause >= pauseDuration)
-                    //    {
-                    //        // Change direction after pause
-                    //        isPaused = false;
-                    //        timeSinceLastPause = 0f;
-
-                    //        // Set the next direction randomly
-                    //        float angle = Random.Range(0f, 360f);
-                    //        nextDirection = Quaternion.AngleAxis(angle, Vector3.up) * Vector3.forward;
-                    //        isMoving = true;
-                    //        animator.SetBool("isMoving", isMoving);
-                    //    }
-                    //}
                 }
 
                 // Update the time since last attack
@@ -280,10 +235,7 @@ public class skeletonGaurd : MonoBehaviour
             {
                 damagepopup.current.CreatePopUp(position, damage.ToString(), Color.yellow);
             }
-            // Play hit animation and sound
-            //animator.SetTrigger("Hit");
-            // audioSource2.clip = hitSound;
-            // audioSource2.Play();
+
         }
         // If the NPC's health is depleted, trigger death sequence
 
@@ -570,9 +522,9 @@ public class skeletonGaurd : MonoBehaviour
 
                     audioSource2.clip = attackSound;
                     audioSource2.Play();
-                    float dmg = Random.Range(0.3f, 0.5f);
-                    float roundedDamage = Mathf.Round(dmg * 100f) / 100f; // round to two decimal places
-                    npcmovement.TakeDamage(roundedDamage);
+                    //float dmg = Random.Range(0.3f, 0.5f);
+                    //float roundedDamage = Mathf.Round(dmg * 100f) / 100f; // round to two decimal places
+                    npcmovement.TakeDamage(DamageDone);
                 }
 
             }
@@ -596,9 +548,9 @@ public class skeletonGaurd : MonoBehaviour
                         audioSource2.Play();
                         characterMovement.animator.SetTrigger("isHitDefending");
                     }
-                    float dmg = Random.Range(0.3f, 0.5f);
-                    float roundedDamage = Mathf.Round(dmg * 100f) / 100f; // round to two decimal places
-                    characterMovement.TakeDamage(roundedDamage);
+                    //float dmg = Random.Range(0.3f, 0.5f);
+                    //float roundedDamage = Mathf.Round(dmg * 100f) / 100f; // round to two decimal places
+                    characterMovement.TakeDamage(DamageDone);
                 }
             }
 

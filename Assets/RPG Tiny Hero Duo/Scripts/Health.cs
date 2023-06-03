@@ -1,46 +1,46 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
-using static System.Net.Mime.MediaTypeNames;
 
 public class Health : MonoBehaviour
 {
-    public float currentHealth;
-    private static UnityEngine.UI.Image Healthbar;
+    private CharacterMovement characterMovement;
+    private UnityEngine.UI.Image healthbar;
 
-    void Start()
+    private void Start()
     {
-        Healthbar = GetComponent<UnityEngine.UI.Image>();
+        characterMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterMovement>();
+        healthbar = GetComponent<UnityEngine.UI.Image>();
     }
 
-    void Update()
+    private void Update()
     {
-        GameObject character = GameObject.FindWithTag("Player"); //Jack prefab is tagged as player
-        if (character != null)
+        if (characterMovement != null)
         {
-            CharacterMovement characterMovement = character.GetComponent<CharacterMovement>();
-            currentHealth = characterMovement.Health;
+            float currentHealth = characterMovement.Health;
+            float maxHealth = characterMovement.MaxHealth;
 
-            Healthbar.fillAmount = currentHealth;
+            float healthPercentage = currentHealth / maxHealth;
+
+            healthbar.fillAmount = healthPercentage;
 
             Color greenHealth = new Color(0.6f, 1, 0.6f, 1);
             Color yellowHealth = new Color(1, 0.92f, 0.016f, 1);
             Color redHealth = new Color(1, 0.3f, 0.3f, 1);
 
-            if (currentHealth >= 0.6f)
+            if (healthPercentage >= 0.6f)
             {
-                Healthbar.color = greenHealth;
+                healthbar.color = greenHealth;
             }
-            else if (currentHealth >= 0.3f)
+            else if (healthPercentage >= 0.3f)
             {
-                Healthbar.color = yellowHealth;
+                healthbar.color = yellowHealth;
             }
             else
             {
-                Healthbar.color = redHealth;
+                healthbar.color = redHealth;
             }
         }
     }
