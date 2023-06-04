@@ -10,7 +10,7 @@ public class FinalSpawner : MonoBehaviour
     public Transform spawnPoint4; // The position where the object will spawn
     public Transform spawnPoint5; // The position where the object will spawn
     public Transform spawnPoint6; // The position where the object will spawn
-    public Collider nonTriggerCollider; // Reference to the non-trigger collider
+ 
     private bool hasSpawned = false; // Flag to track if object has spawned
     private bool hasEntered = false;
     private GameObject spawnedObject1; // Reference to the first spawned object
@@ -20,6 +20,14 @@ public class FinalSpawner : MonoBehaviour
     private GameObject spawnedObject5; // Reference to the fifth spawned object
     private GameObject spawnedObject6; // Reference to the sixth spawned object
     private int spawnCount = 0;
+    public Collider nonTriggerCollider1; // Reference to the non-trigger collider
+    public Collider nonTriggerCollider2; // Reference to the non-trigger collider
+    public Collider nonTriggerCollider3; // Reference to the non-trigger collider
+    public Collider nonTriggerCollider4; // Reference to the non-trigger collider
+    public Collider nonTriggerCollider5; // Reference to the non-trigger collider
+    public Collider nonTriggerCollider6; // Reference to the non-trigger collider
+    public Collider nonTriggerCollider7; // Reference to the non-trigger collider
+    public Collider nonTriggerCollider8; // Reference to the non-trigger collider
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && !hasSpawned)
@@ -28,7 +36,14 @@ public class FinalSpawner : MonoBehaviour
             hasSpawned = true;
             hasEntered = true;
             // Disable the collider's "isTrigger" property
-            // nonTriggerCollider.isTrigger = false;
+            nonTriggerCollider1.isTrigger = false;
+            nonTriggerCollider2.isTrigger = false;
+            nonTriggerCollider3.isTrigger = false;
+            nonTriggerCollider4.isTrigger = false;
+            nonTriggerCollider5.isTrigger = false;
+            nonTriggerCollider6.isTrigger = false;
+            nonTriggerCollider7.isTrigger = false;
+            nonTriggerCollider8.isTrigger = false;
         }
     }
 
