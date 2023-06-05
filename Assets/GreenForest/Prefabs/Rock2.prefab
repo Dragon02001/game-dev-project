@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 33874363274743180}
   - component: {fileID: 23778972830850550}
   - component: {fileID: 95910594979210948}
-  - component: {fileID: -134472643557127138}
-  - component: {fileID: 4875488513370722193}
   m_Layer: 0
   m_Name: Rock2
   m_TagString: Untagged
@@ -107,30 +105,3 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!65 &-134472643557127138
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1324920668119238}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 17.510391, y: 6.8539, z: 10.107151}
-  m_Center: {x: 0.00000047683716, y: 3.42695, z: 0.8313668}
---- !u!136 &4875488513370722193
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1324920668119238}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 6.74
-  m_Height: 6.8539
-  m_Direction: 0
-  m_Center: {x: 0.00000047683716, y: 0.68, z: 0.8313668}

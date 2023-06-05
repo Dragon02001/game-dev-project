@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 4391160151576946}
   - component: {fileID: 33899556795903068}
   - component: {fileID: 23858334396737500}
-  - component: {fileID: -5364620842372618415}
-  - component: {fileID: 6539807506277206803}
+  - component: {fileID: 3123537567822810226}
   m_Layer: 0
   m_Name: Smalltree
   m_TagString: Untagged
@@ -86,20 +85,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &-5364620842372618415
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1592565926346290}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 12.048342, y: 17.104492, z: 10.019666}
-  m_Center: {x: -0.61724925, y: 7.9770145, z: 0.46674728}
---- !u!136 &6539807506277206803
+--- !u!136 &3123537567822810226
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -109,7 +95,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.34
+  m_Radius: 0.47
   m_Height: 17.104492
   m_Direction: 1
-  m_Center: {x: -0.09, y: 7.9770145, z: -0.09}
+  m_Center: {x: -0.24, y: 7.9770145, z: -0.01}

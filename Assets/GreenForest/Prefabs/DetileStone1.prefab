@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 33067402459291226}
   - component: {fileID: 23876775597818724}
   - component: {fileID: 95602569332830928}
-  - component: {fileID: -4874374594801219972}
-  - component: {fileID: 3556262004553057970}
   m_Layer: 0
   m_Name: DetileStone1
   m_TagString: Untagged
@@ -107,30 +105,3 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!65 &-4874374594801219972
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1035347849907210}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1.3006735, y: 0.58990157, z: 1.6194022}
-  m_Center: {x: -0.14622286, y: 0.1514701, z: 0.2641381}
---- !u!136 &3556262004553057970
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1035347849907210}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.29
-  m_Height: 1.45
-  m_Direction: 2
-  m_Center: {x: -0.1, y: -0.03, z: 0.2641381}
