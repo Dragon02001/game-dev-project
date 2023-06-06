@@ -28,6 +28,8 @@ public class FinalSpawner : MonoBehaviour
     public Collider nonTriggerCollider6; // Reference to the non-trigger collider
     public Collider nonTriggerCollider7; // Reference to the non-trigger collider
     public Collider nonTriggerCollider8; // Reference to the non-trigger collider
+
+    public Collider cutSceneCollider; // Refrence the trigger after the fight
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && !hasSpawned)
@@ -78,6 +80,7 @@ public class FinalSpawner : MonoBehaviour
     {
         if (hasEntered)
         {
+            cutSceneCollider.isTrigger = false;
             if (spawnCount == 1)
             {
                 if (AreAllObjectsDestroyed())
@@ -91,7 +94,16 @@ public class FinalSpawner : MonoBehaviour
                 {
                     SpawnObject2();
                 }
+                
+            }
+            else if (spawnCount == 3)
+            {
+                if (AreAllObjectsDestroyed())
+                {
+                    cutSceneCollider.isTrigger = true;
+                }
             }
         }
+             
     }
 }
