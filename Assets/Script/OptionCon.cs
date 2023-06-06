@@ -59,8 +59,11 @@ public class OptionCon : MonoBehaviour
    
     public void OpenSettingsCanvas()
     {
-        Time.timeScale = 0f; // Pause the game
-        settingsCanvas.SetActive(true); // Show the settings canvas
+        if (!settingsCanvas.activeSelf)
+        {
+            Time.timeScale = 0f; // Pause the game
+            settingsCanvas.SetActive(true); // Show the settings canvas
+        }
     }
 
 }
