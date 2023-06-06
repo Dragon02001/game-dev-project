@@ -13,7 +13,7 @@ public class textRep : MonoBehaviour
         "Follow the lights",
         "Beware of lurking enemies",
         "Stay hidden and avoid detection",
-        "Navigate the forest cautiously",
+        "Navigate the land cautiously",
         "Survive the watchful eyes of your foes"
     };
 
