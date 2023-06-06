@@ -80,6 +80,7 @@ public class FinalSpawner : MonoBehaviour
     {
         if (hasEntered)
         {
+            cutSceneCollider.isTrigger = false;
             if (spawnCount == 1)
             {
                 if (AreAllObjectsDestroyed())
@@ -93,13 +94,16 @@ public class FinalSpawner : MonoBehaviour
                 {
                     SpawnObject2();
                 }
+                
             }
-            else if (spawnCount == 3) {
+            else if (spawnCount == 3)
+            {
                 if (AreAllObjectsDestroyed())
                 {
                     cutSceneCollider.isTrigger = true;
                 }
             }
         }
+             
     }
 }
