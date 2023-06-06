@@ -105,11 +105,10 @@ public class Sword : MonoBehaviour
 
     }
 
-    
+
     // public GameObject HitParticle;
     private void OnTriggerEnter(Collider other)
     {
-
         if (other.CompareTag("Enemy") && cm.isAttacking)
         {
             Debug.Log(other.name);
@@ -126,15 +125,16 @@ public class Sword : MonoBehaviour
                 skeletonGaurd npcEnemy = other.GetComponent<skeletonGaurd>();
                 float roundedDamage = Mathf.Round(damage * 100f) / 100f; // Round to two decimal places
                 npcEnemy.TakeDamage(roundedDamage);
-
             }
-            //else if (other.GetComponent<EnemyScript2>() != null)
-            //{
-            //    EnemyScript2 enemyScript2 = other.GetComponent<EnemyScript2>();
-            //    // Handle enemy script 2 specific logic
-            //}
-
-            // Instantiate(HitParticle, new Vector3(other.transform.position.x, transform.poistion.y, other.transform.position.z), other.transform.rotation);
+            else if (other.GetComponent<golemScript>() != null)
+            {
+                golemScript golemEnemy = other.GetComponent<golemScript>();
+                if (!golemEnemy.invulnerable) // Check if the invulnerable flag is false
+                {
+                    float roundedDamage = Mathf.Round(damage * 100f) / 100f; // Round to two decimal places
+                    golemEnemy.TakeDamage(roundedDamage);
+                }
+            }
         }
     }
 }

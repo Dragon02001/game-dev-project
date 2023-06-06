@@ -47,13 +47,13 @@ public class AN_Button : MonoBehaviour
         startQuat = transform.rotation;
         rampQuat = RampObject.rotation;
     }
-    // ... previous code ...
+
 
     void Update()
     {
         if (!Locked)
         {
-            if (Input.GetKeyDown(KeyCode.F) && !isValve && DoorObject != null && DoorObject.Remote && NearView(2f, 45f)) // 1.lever and 2.button
+            if (Input.GetKeyDown(KeyCode.F) && !isValve && DoorObject != null && DoorObject.Remote && NearView(3f, 90f)) // 1.lever and 2.button
             {
                 DoorObject.Action(); // void in door script to open/close
                 if (isLever) // animations

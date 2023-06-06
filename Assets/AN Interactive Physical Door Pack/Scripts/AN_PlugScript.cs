@@ -1,15 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AN_PlugScript : MonoBehaviour
 {
-    [Tooltip("Feature for one using only")]
+    [Tooltip("Feature for one-time use only")]
     public bool OneTime = false;
-    [Tooltip("Plug follow this local EmptyObject")]
+    [Tooltip("Plug follows this local EmptyObject")]
     public Transform HeroHandsPosition;
-    [Tooltip("SocketObject with collider(shpere, box etc.) (is trigger = true)")]
-    public Collider Socket; // need Trigger
+    [Tooltip("SocketObject with collider (sphere, box, etc.) (isTrigger = true)")]
+    public Collider Socket;
     public AN_DoorScript DoorObject;
 
     // NearView()
@@ -23,13 +21,15 @@ public class AN_PlugScript : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true; // Disable physics simulation initially
     }
 
     void Update()
     {
-        if (youCan) Interaction();
+        if (youCan)
+            Interaction();
 
-        // frozen if it is connected to PowerOut
+        // Frozen if it is connected to the Socket
         if (isConnected)
         {
             gameObject.transform.position = Socket.transform.position;
@@ -44,45 +44,46 @@ public class AN_PlugScript : MonoBehaviour
 
     void Interaction()
     {
-        if (NearView() && Input.GetKeyDown(KeyCode.E) && !follow)
+        if (Input.GetKey(KeyCode.F) && NearView(3f, 90f) && !follow)
         {
-            isConnected = false; // unfrozen
+            isConnected = false; // Unfreeze
             follow = true;
             followFlag = false;
+            rb.isKinematic = true; // Disable physics simulation
         }
 
         if (follow)
         {
-            rb.drag = 10f;
-            rb.angularDrag = 10f;
             if (followFlag)
             {
                 distance = Vector3.Distance(transform.position, Camera.main.transform.position);
-                if (distance > 3f || Input.GetKeyDown(KeyCode.E))
+                if (distance > 3f || Input.GetKeyDown(KeyCode.F))
                 {
                     follow = false;
                 }
             }
 
             followFlag = true;
-            rb.AddExplosionForce(-1000f, HeroHandsPosition.position, 10f);
-            // second variant of following
-            //gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, objectLerp.position, 1f);
-        }
-        else
-        {
-            rb.drag = 0f;
-            rb.angularDrag = .5f;
+            rb.isKinematic = true; // Disable physics simulation
+            gameObject.transform.position = HeroHandsPosition.position;
+            gameObject.transform.rotation = HeroHandsPosition.rotation;
         }
     }
 
-    bool NearView() // it is true if you near interactive object
+    bool NearView(float maxDistance, float maxAngle)
     {
-        distance = Vector3.Distance(transform.position, Camera.main.transform.position);
-        direction = transform.position - Camera.main.transform.position;
-        angleView = Vector3.Angle(Camera.main.transform.forward, direction);
-        if (distance < 3f && angleView <35f) return true;
-        else return false;
+        GameObject playerObject = GameObject.FindWithTag("Player");
+        if (playerObject == null)
+        {
+            Debug.LogWarning("Player object not found with tag 'Player'. Make sure the player object has the correct tag assigned.");
+            return false;
+        }
+
+        distance = Vector3.Distance(transform.position, playerObject.transform.position);
+        direction = transform.position - playerObject.transform.position;
+        angleView = Vector3.Angle(playerObject.transform.forward, direction);
+
+        return (angleView < maxAngle && distance < maxDistance);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -92,7 +93,10 @@ public class AN_PlugScript : MonoBehaviour
             isConnected = true;
             follow = false;
             DoorObject.rbDoor.AddRelativeTorque(new Vector3(0, 0, 20f));
+            rb.isKinematic = true; // Disable physics simulation
         }
-        if (OneTime) youCan = false;
+
+        if (OneTime)
+            youCan = false;
     }
 }

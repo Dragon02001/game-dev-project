@@ -3,36 +3,26 @@ using UnityEngine.PostProcessing;
 
 namespace UnityEditor.PostProcessing
 {
-    public class MinValueAttribute : PropertyAttribute
-    {
-        public float minValue;
-
-        public MinValueAttribute(float minValue)
-        {
-            this.minValue = minValue;
-        }
-    }
-
-    [CustomPropertyDrawer(typeof(MinValueAttribute))]
-    sealed class MinValueDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(UnityEngine.PostProcessing.MinAttribute))] // Specify the namespace
+    sealed class MinDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            MinValueAttribute attribute = (MinValueAttribute)base.attribute;
+            UnityEngine.PostProcessing.MinAttribute attribute = (UnityEngine.PostProcessing.MinAttribute)base.attribute; // Specify the namespace
 
             if (property.propertyType == SerializedPropertyType.Integer)
             {
                 int v = EditorGUI.IntField(position, label, property.intValue);
-                property.intValue = Mathf.Max(v, (int)attribute.minValue);
+                property.intValue = (int)Mathf.Max(v, attribute.min);
             }
             else if (property.propertyType == SerializedPropertyType.Float)
             {
                 float v = EditorGUI.FloatField(position, label, property.floatValue);
-                property.floatValue = Mathf.Max(v, attribute.minValue);
+                property.floatValue = Mathf.Max(v, attribute.min);
             }
             else
             {
-                EditorGUI.LabelField(position, label.text, "Use MinValue with float or int.");
+                EditorGUI.LabelField(position, label.text, "Use Min with float or int.");
             }
         }
     }

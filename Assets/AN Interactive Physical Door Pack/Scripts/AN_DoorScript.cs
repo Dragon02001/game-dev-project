@@ -46,7 +46,7 @@ public class AN_DoorScript : MonoBehaviour
 
     void Update()
     {
-        if ( !Remote && Input.GetKeyDown(KeyCode.E) && NearView() )
+        if ( !Remote && Input.GetKey(KeyCode.F) && NearView(3f, 90f))
             Action();
         
     }
@@ -81,13 +81,30 @@ public class AN_DoorScript : MonoBehaviour
         }
     }
 
-    bool NearView() // it is true if you near interactive object
+    bool NearView(float maxDistance, float maxAngle)
     {
-        distance = Vector3.Distance(transform.position, Camera.main.transform.position);
-        direction = transform.position - Camera.main.transform.position;
-        angleView = Vector3.Angle(Camera.main.transform.forward, direction);
-        if (distance < 3f) return true; // angleView < 35f && 
-        else return false;
+        GameObject playerObject = GameObject.FindWithTag("Player");
+        if (playerObject == null)
+        {
+            Debug.LogWarning("Player object not found with tag 'Player'. Make sure the player object has the correct tag assigned.");
+            return false;
+        }
+
+        distance = Vector3.Distance(transform.position, playerObject.transform.position);
+        direction = transform.position - playerObject.transform.position;
+        angleView = Vector3.Angle(playerObject.transform.forward, direction);
+
+        if (angleView < maxAngle && distance < maxDistance)
+        {
+            return true;
+
+        }
+        else
+        {
+            return false;
+
+        }
+
     }
 
     private void FixedUpdate() // door is physical object
