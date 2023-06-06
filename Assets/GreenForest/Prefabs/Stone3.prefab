@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4013422106459650}
   - component: {fileID: 33382392435084206}
   - component: {fileID: 23631238152645148}
-  - component: {fileID: 3247007182595964539}
   m_Layer: 0
   m_Name: Stone3
   m_TagString: Untagged
@@ -84,17 +83,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &3247007182595964539
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1618664265844600}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.14
-  m_Height: 1.379569
-  m_Direction: 1
-  m_Center: {x: 0.08, y: 0.6816329, z: 0.00000047683716}

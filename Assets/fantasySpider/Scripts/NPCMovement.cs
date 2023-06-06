@@ -37,7 +37,7 @@ public class NPCMovement : MonoBehaviour
     private float timeSinceLastPause = 0f;
     private float directionChangeDelay = 2f;
     private float pauseDuration = 1f;
-    private float Health;
+    public float Health;
     public float PlayerHealth;
     public int Fire;
     public int Ice;
@@ -70,16 +70,7 @@ public class NPCMovement : MonoBehaviour
 
     private void Update()
     {
-        if (electrified)
-        {
-            attackDistance = 10f;
-            followDistance = 30f;
-        }
-        else
-        {
-            attackDistance = 8f;
-            followDistance = 20f;
-        }
+
         if (Alive)
         {
           if (!Freeze)

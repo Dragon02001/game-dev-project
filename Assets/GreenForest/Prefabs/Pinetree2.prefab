@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4836383488054588}
   - component: {fileID: 33821058462474890}
   - component: {fileID: 23306027707534168}
-  - component: {fileID: 6552144195801817418}
+  - component: {fileID: 5734589894254039536}
   m_Layer: 0
   m_Name: Pinetree2
   m_TagString: Untagged
@@ -85,7 +85,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &6552144195801817418
+--- !u!136 &5734589894254039536
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,7 +95,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.25
+  m_Radius: 0.29
   m_Height: 12.814166
   m_Direction: 1
-  m_Center: {x: -0.04, y: 6.1054053, z: 0.01}
+  m_Center: {x: 0.13, y: 6.1054053, z: 0.1}

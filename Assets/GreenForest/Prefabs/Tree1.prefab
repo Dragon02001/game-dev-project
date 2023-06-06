@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 33463206233210374}
   - component: {fileID: 23084524858069022}
   - component: {fileID: 95085564227879946}
-  - component: {fileID: -1364934783279612468}
-  - component: {fileID: 7828305503159345046}
   m_Layer: 0
   m_Name: Tree1
   m_TagString: Untagged
@@ -108,29 +106,3 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!65 &-1364934783279612468
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1449644707152252}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 11.085997, y: 14.672346, z: 9.56254}
-  m_Center: {x: -0.043771744, y: 7.0957146, z: -0.11372113}
---- !u!65 &7828305503159345046
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1449644707152252}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 11.085997, y: 14.672346, z: 9.56254}
-  m_Center: {x: -0.043771744, y: 7.0957146, z: -0.11372113}

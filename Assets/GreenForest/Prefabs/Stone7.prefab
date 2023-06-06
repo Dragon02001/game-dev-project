@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 4592821868147796}
   - component: {fileID: 33697474710300894}
   - component: {fileID: 23183657855095822}
-  - component: {fileID: 6612823189893169438}
-  - component: {fileID: 8457693585818469143}
   m_Layer: 0
   m_Name: Stone7
   m_TagString: Untagged
@@ -85,30 +83,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6612823189893169438
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1419972159389010}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1.2319651, y: 0.7361794, z: 1.8139253}
-  m_Center: {x: -0.0000014305115, y: 0.28189835, z: 0.00000023841858}
---- !u!136 &8457693585818469143
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1419972159389010}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.24
-  m_Height: 1.7
-  m_Direction: 2
-  m_Center: {x: -0.0000014305115, y: 0.28189835, z: 0.00000023841858}

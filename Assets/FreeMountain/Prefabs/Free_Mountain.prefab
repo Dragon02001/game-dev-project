@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 400386}
   - component: {fileID: 3390856}
   - component: {fileID: 2315166}
-  - component: {fileID: 7472333576911296337}
   m_Layer: 0
   m_Name: Free_Mountain
   m_TagString: Untagged
@@ -84,16 +83,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &7472333576911296337
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 162790}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 488.2747, y: 91.46067, z: 488.27466}
-  m_Center: {x: 0.000030517578, y: -0.00004959106, z: 0.000015258789}

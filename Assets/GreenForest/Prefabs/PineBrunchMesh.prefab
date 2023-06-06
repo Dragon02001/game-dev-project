@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4884628963280076}
   - component: {fileID: 33754108930835762}
   - component: {fileID: 23287504562246514}
-  - component: {fileID: -6864007429769658876}
   m_Layer: 0
   m_Name: PineBrunchMesh
   m_TagString: Untagged
@@ -84,16 +83,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &-6864007429769658876
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1153949849326846}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 7.5471992, y: 6.405592, z: 8.752356}
-  m_Center: {x: 0.031949162, y: -2.8154879, z: 3.8453026}

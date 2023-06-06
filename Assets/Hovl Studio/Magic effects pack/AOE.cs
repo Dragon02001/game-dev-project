@@ -130,7 +130,7 @@ public class AOE : MonoBehaviour
     }
     void position()
     {
-        offset = new Vector3(0.0f, 2f, 0.0f);
+        offset = new Vector3(0.0f, 1f, 0.0f);
         spawnPosition = transform.position + offset;
     }
 

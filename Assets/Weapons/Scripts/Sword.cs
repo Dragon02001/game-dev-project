@@ -15,38 +15,38 @@ public class Sword : MonoBehaviour
     public Stamina stamina;
     private bool highDamage = false;
     float damage;
+    public float attackCooldown = 0.5f; // Cooldown period between attacks
+    private bool canAttack = true; // Flag to track if the player can perform an attack
+
     // Start is called before the first frame update
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        //  Enemy = GameObject.FindGameObjectWithTag("Enemy");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && cm.playerStamina > 0.0f)
+        if (canAttack && Input.GetMouseButtonDown(0) && cm.playerStamina > 0.0f)
         {
             cm.isAttacking = true;
-            //Debug.Log(comboCount);
-            //Debug.Log(cm.isAttacking);
-            // Start the appropriate attack animation based on the current combo count
-            if (comboCount == 0 && cm.playerStamina > 0.1f)
+
+            if (comboCount == 0 )
             {
                 cm.animator.SetTrigger("combo1");
                 comboCount++;
                 lastComboAttackTime = Time.time;
-                cm.playerStamina -= 0.1f;
+               
                 audioSource.PlayOneShot(attackSound);
                 damage = Random.Range(0.1f, 0.3f);
 
             }
-            else if (comboCount == 1 && Time.time - lastComboAttackTime < 1f && cm.playerStamina > 0.1f)
+            else if (comboCount == 1 && Time.time - lastComboAttackTime < 1f )
             {
                 cm.animator.SetTrigger("combo2");
                 comboCount++;
                 lastComboAttackTime = Time.time;
-                cm.playerStamina -= 0.1f;
+               
                 audioSource.PlayOneShot(attackSound);
                 damage = Random.Range(0.3f, 0.5f);
 
@@ -54,7 +54,7 @@ public class Sword : MonoBehaviour
             else if (comboCount == 2 && cm.playerStamina > 0.1f)
             {
                 cm.animator.SetTrigger("combo3");
-                cm.playerStamina -= 0.1f;
+                
                 audioSource.PlayOneShot(SpinningAttackSound);
                 highDamage = true;
                 damage = Random.Range(0.5f, 0.8f);
@@ -66,18 +66,24 @@ public class Sword : MonoBehaviour
             }
 
             // Play attack sound and decrement player stamina
-            
-            
 
-
-            // If the combo count has exceeded the maximum combo count, reset the combo count
             if (comboCount > maxComboCount)
             {
                 comboCount = 0;
             }
 
             lastAttackTime = Time.time;
+            canAttack = false; // Disable further attacks
+
+            StartCoroutine(EnableAttackAfterCooldown()); // Start the cooldown timer
         }
+
+        IEnumerator EnableAttackAfterCooldown()
+        {
+            yield return new WaitForSeconds(attackCooldown);
+            canAttack = true; // Enable attacks after the cooldown period
+        }
+    
         IEnumerator WaitAndSetAttacking(float seconds)
         {
             yield return new WaitForSeconds(seconds);
@@ -99,26 +105,36 @@ public class Sword : MonoBehaviour
 
     }
 
-    
+
     // public GameObject HitParticle;
     private void OnTriggerEnter(Collider other)
     {
-
-        if (other.tag == "Enemy" && cm.isAttacking)
+        if (other.CompareTag("Enemy") && cm.isAttacking)
         {
             Debug.Log(other.name);
-            NPCMovement enemy = other.GetComponent<NPCMovement>(); //Retrieve the NPCMovement component from the GameObject
-            if (enemy != null)
+
+            // Check for different enemy scripts using their specific tags or components
+            if (other.GetComponent<NPCMovement>() != null)
             {
-               
-
-                float roundedDamage = Mathf.Round(damage * 100f) / 100f; // round to two decimal places
-                enemy.TakeDamage(roundedDamage);
+                NPCMovement npcEnemy = other.GetComponent<NPCMovement>();
+                float roundedDamage = Mathf.Round(damage * 100f) / 100f; // Round to two decimal places
+                npcEnemy.TakeDamage(roundedDamage);
             }
-
-
-
-            // Instantiate(HitParticle, new Vector3(other.transform.position.x, transform.poistion.y, other.transform.position.z), other.transform.rotation);
+            else if (other.GetComponent<skeletonGaurd>() != null)
+            {
+                skeletonGaurd npcEnemy = other.GetComponent<skeletonGaurd>();
+                float roundedDamage = Mathf.Round(damage * 100f) / 100f; // Round to two decimal places
+                npcEnemy.TakeDamage(roundedDamage);
+            }
+            else if (other.GetComponent<golemScript>() != null)
+            {
+                golemScript golemEnemy = other.GetComponent<golemScript>();
+                if (!golemEnemy.invulnerable) // Check if the invulnerable flag is false
+                {
+                    float roundedDamage = Mathf.Round(damage * 100f) / 100f; // Round to two decimal places
+                    golemEnemy.TakeDamage(roundedDamage);
+                }
+            }
         }
     }
 }
