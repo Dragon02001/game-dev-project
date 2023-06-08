@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class moving : MonoBehaviour
 {
+    public CharacterMovement cm;
     public bool useCharacterForward = false;
     public bool lockToCameraForward = false;
     public float turnSpeed = 10f;
@@ -56,7 +57,7 @@ public class moving : MonoBehaviour
         // set sprinting
         isSprinting = ((Input.GetKey(sprintJoystick) || Input.GetKey(sprintKeyboard)) && input != Vector2.zero && direction >= 0f);
         anim.SetBool("isSprinting", isSprinting);
-
+        cm.isRunning = isSprinting;
         // Update target direction relative to the camera view (or not if the Keep Direction option is checked)
         UpdateTargetDirection();
         if (input != Vector2.zero && targetDirection.magnitude > 0.1f)

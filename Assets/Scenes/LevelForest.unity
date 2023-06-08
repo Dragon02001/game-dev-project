@@ -1469,7 +1469,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765c096b9405a1144a6e28088449cb83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gemsText: {fileID: 0}
+  gemsText: {fileID: 1356563919}
   GemSound: {fileID: 1678760008}
 --- !u!135 &73770253
 SphereCollider:
@@ -8082,7 +8082,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765c096b9405a1144a6e28088449cb83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gemsText: {fileID: 0}
+  gemsText: {fileID: 1356563919}
   GemSound: {fileID: 1678760008}
 --- !u!135 &321114382
 SphereCollider:
@@ -37844,7 +37844,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765c096b9405a1144a6e28088449cb83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gemsText: {fileID: 0}
+  gemsText: {fileID: 1356563919}
   GemSound: {fileID: 1678760008}
 --- !u!135 &1368973587
 SphereCollider:
@@ -40687,7 +40687,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765c096b9405a1144a6e28088449cb83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gemsText: {fileID: 0}
+  gemsText: {fileID: 1356563919}
   GemSound: {fileID: 1678760008}
 --- !u!135 &1509180657
 SphereCollider:
@@ -41613,7 +41613,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765c096b9405a1144a6e28088449cb83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gemsText: {fileID: 0}
+  gemsText: {fileID: 1356563919}
   GemSound: {fileID: 1678760008}
 --- !u!135 &1550455467
 SphereCollider:
@@ -43149,7 +43149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765c096b9405a1144a6e28088449cb83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gemsText: {fileID: 0}
+  gemsText: {fileID: 1356563919}
   GemSound: {fileID: 1678760008}
 --- !u!135 &1621472550
 SphereCollider:
@@ -44524,7 +44524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765c096b9405a1144a6e28088449cb83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gemsText: {fileID: 0}
+  gemsText: {fileID: 1356563919}
   GemSound: {fileID: 1678760008}
 --- !u!135 &1678760010
 SphereCollider:
@@ -56072,7 +56072,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765c096b9405a1144a6e28088449cb83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gemsText: {fileID: 0}
+  gemsText: {fileID: 1356563919}
   GemSound: {fileID: 1678760008}
 --- !u!135 &2073313113
 SphereCollider:

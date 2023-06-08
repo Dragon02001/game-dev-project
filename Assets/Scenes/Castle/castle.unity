@@ -996,11 +996,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6587716870196111162, guid: 8435856006f29e74bb7ebc77681e6dcc, type: 3}
   m_PrefabInstance: {fileID: 1046394368}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &41202180 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3377181292992421420, guid: 48c5715f9603c3842a353516a8baefbb, type: 3}
-  m_PrefabInstance: {fileID: 1563985018}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &41202181 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3423388300971593625, guid: 48c5715f9603c3842a353516a8baefbb, type: 3}
@@ -29918,7 +29913,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh796624
+  m_Name: pb_Mesh61864
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -72333,7 +72328,7 @@ MonoBehaviour:
   attackDistance: 5
   attackInterval: 2.5
   DamageDone: 0.4
-  maxHealth: 3
+  maxHealth: 1.5
   speed: 5
   runSound: {fileID: 8300000, guid: f036abbbf2d9e0e40803e2f6076a07aa, type: 3}
   attackSound: {fileID: 8300000, guid: 616a0fe5918e2644e963e4dfc1a4fa3e, type: 3}
@@ -78260,6 +78255,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   isAttacking: 0
   isDefending: 0
+  isRunning: 0
   MaxHealth: 5
   Health: 5
   playerStamina: 1
@@ -78388,7 +78384,7 @@ MonoBehaviour:
   keyToInstantiatePrefab1: 113
   prefabToInstantiateA: {fileID: 1272561704}
   prefabToInstantiateB: {fileID: 1265636185}
-  prefabToInstantiateC: {fileID: 41202180}
+  prefabToInstantiateC: {fileID: 793163085}
   keyToInstantiatePrefab2: 101
   prefabToInstantiateD: {fileID: 1854456470}
   prefabToInstantiateE: {fileID: 641107508}
@@ -78397,8 +78393,8 @@ MonoBehaviour:
   spawnPosition: {x: 0, y: 0, z: 0}
   timeToDestroy1: 4
   timeToDestroy2: 1.8
-  SideAbility: 1
-  UltAbility: 1
+  SideAbility: 3
+  UltAbility: 3
   newObject: {fileID: 0}
   cm: {fileID: 1799867054}
 --- !u!114 &1799867057
@@ -78413,6 +78409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc701a86b453560439a6181ca6ecce64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cm: {fileID: 1799867054}
   useCharacterForward: 0
   lockToCameraForward: 0
   turnSpeed: 10

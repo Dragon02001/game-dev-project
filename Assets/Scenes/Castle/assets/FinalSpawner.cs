@@ -100,7 +100,7 @@ public class FinalSpawner : MonoBehaviour
             {
                 if (AreAllObjectsDestroyed())
                 {
-                    Portal.enabled = true;
+                    Portal.gameObject.SetActive(true);
                 }
             }
         }

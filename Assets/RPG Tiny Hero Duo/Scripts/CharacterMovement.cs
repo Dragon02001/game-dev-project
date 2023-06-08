@@ -23,7 +23,7 @@ public class CharacterMovement : MonoBehaviour
     public bool isAttacking = false;
     public bool isDefending = false;
     private bool isJumping = false;
-    private bool isRunning = false;
+    public bool isRunning = false;
 
 
     public float MaxHealth = 1.0f;
@@ -195,7 +195,7 @@ public class CharacterMovement : MonoBehaviour
             
             void UpdateStamina()
             {
-                if ( isJumping)
+                if (isRunning || isJumping)
                 {
                     playerStamina -= 0.1f * Time.deltaTime;
                     if (playerStamina < 0.0f)
