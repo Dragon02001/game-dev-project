@@ -304,7 +304,7 @@ public class golemScript : MonoBehaviour
         if(phase == 1)
         {
             
-            if (Health < 7.5) 
+            if (Health < 15) 
             {
                 
                 invulnerable = true;
@@ -313,7 +313,7 @@ public class golemScript : MonoBehaviour
         }else if (phase == 2)
         {
  
-            if (Health < 5)
+            if (Health < 10)
             {
                 
                 invulnerable = true;
@@ -323,9 +323,19 @@ public class golemScript : MonoBehaviour
         else if (phase == 3)
         {
             
-            if (Health < 2.5)
+            if (Health < 5)
             {
   
+                invulnerable = true;
+                invul();
+            }
+        }
+        else if (phase == 4)
+        {
+
+            if (Health < 1.5)
+            {
+
                 invulnerable = true;
                 invul();
             }
@@ -410,6 +420,27 @@ public class golemScript : MonoBehaviour
             spawnedObject3 = Instantiate(objectToSpawn5, spawnPoint3.position, spawnPoint3.rotation);
             spawnedObject4 = Instantiate(objectToSpawn6, spawnPoint4.position, spawnPoint4.rotation);
             spawnedObject5 = Instantiate(objectToSpawn6, spawnPoint5.position, spawnPoint5.rotation);
+            spawnedObject6 = Instantiate(objectToSpawn6, spawnPoint6.position, spawnPoint6.rotation);
+            newObject1 = Instantiate(prefabToInstantiateA, spawnPoint1.position, spawnPoint1.rotation);
+            newObject2 = Instantiate(prefabToInstantiateA, spawnPoint2.position, spawnPoint2.rotation);
+            newObject3 = Instantiate(prefabToInstantiateA, spawnPoint3.position, spawnPoint3.rotation);
+            newObject4 = Instantiate(prefabToInstantiateA, spawnPoint4.position, spawnPoint4.rotation);
+            newObject5 = Instantiate(prefabToInstantiateA, spawnPoint5.position, spawnPoint5.rotation);
+            newObject6 = Instantiate(prefabToInstantiateA, spawnPoint6.position, spawnPoint6.rotation);
+            Destroy(newObject1, 1f);
+            Destroy(newObject2, 1f);
+            Destroy(newObject3, 1f);
+            Destroy(newObject4, 1f);
+            Destroy(newObject5, 1f);
+            Destroy(newObject6, 1f);
+        }
+        else if (phase == 4)
+        {
+            spawnedObject1 = Instantiate(objectToSpawn1, spawnPoint1.position, spawnPoint1.rotation);
+            spawnedObject2 = Instantiate(objectToSpawn2, spawnPoint2.position, spawnPoint2.rotation);
+            spawnedObject3 = Instantiate(objectToSpawn3, spawnPoint3.position, spawnPoint3.rotation);
+            spawnedObject4 = Instantiate(objectToSpawn4, spawnPoint4.position, spawnPoint4.rotation);
+            spawnedObject5 = Instantiate(objectToSpawn5, spawnPoint5.position, spawnPoint5.rotation);
             spawnedObject6 = Instantiate(objectToSpawn6, spawnPoint6.position, spawnPoint6.rotation);
             newObject1 = Instantiate(prefabToInstantiateA, spawnPoint1.position, spawnPoint1.rotation);
             newObject2 = Instantiate(prefabToInstantiateA, spawnPoint2.position, spawnPoint2.rotation);
