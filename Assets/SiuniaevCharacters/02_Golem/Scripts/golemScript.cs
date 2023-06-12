@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-
+using UnityEngine.SceneManagement;
 public class golemScript : MonoBehaviour
 {
 
@@ -82,6 +82,12 @@ public class golemScript : MonoBehaviour
     public GameObject newObject4;
     public GameObject newObject5;
     public GameObject newObject6;
+
+    public string levelName;
+
+
+            
+    
     private void Start()
     {
         initialPosition = transform.position;
@@ -357,7 +363,7 @@ public class golemScript : MonoBehaviour
                 audioSource2.clip = deathSound;
                 audioSource2.Play();
                 Destroy(gameObject, 5f);
-
+                Invoke("end", 3f);
             }
         }
         Debug.Log(Health);
@@ -664,7 +670,10 @@ public class golemScript : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackDistance);
     }
-
+    private void end()
+    {
+        SceneManager.LoadScene(levelName);
+    }
     IEnumerator AttackWithDelay(float delay)
     {
         // Stop moving and playing the run sound
